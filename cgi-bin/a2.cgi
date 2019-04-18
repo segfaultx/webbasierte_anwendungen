@@ -20,7 +20,7 @@ def check_login():
         show_login()
 
 if __name__ == "__main__":
-    cgitb.enable(os.path.expanduser("~/logs"))
+    cgitb.enable(os.path.expanduser("~/Studium_Medieninformatik_Semester6/Webbasierte-Anwendungen/cgi-bin/logs"))
     if os.environ["REQUEST_METHOD"] == "GET":
         show_login()
     if os.environ["REQUEST_METHOD"] == "POST" and os.environ["PATH_INFO"] == "/login":
