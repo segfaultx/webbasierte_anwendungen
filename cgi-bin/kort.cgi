@@ -44,8 +44,11 @@ def show_riddle():
 
 def show_win_screen():
     db[sessionid]["correct"] = 0
-    answer = '''<p>Glueckwunsch {}! Du hast {} Sekunden gebraucht,
-     um 3 Aufgaben in Folge zu loesen!</p>'''.format(db[sessionid]["user"], sum(db[sessionid]["riddletime"]))
+    answer = '''<p>Glueckwunsch {}! Du hast {} Sekunden gebraucht
+     um 3 Aufgaben in Folge zu loesen!</p>
+     <form action={}/show_riddle method="POST">
+     <input type="submit" value="Nochmal"/>
+     </form>'''.format(db[sessionid]["user"], int(sum([time.time()-entry for entry in db[sessionid]["riddletime"]])), os.environ["SCRIPT_NAME"])
     db[sessionid]["riddletime"] = []
     print("Content-type: text/html")
     print(cookie.output())
