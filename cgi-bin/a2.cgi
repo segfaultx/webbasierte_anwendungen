@@ -1,21 +1,48 @@
 #!/usr/bin/env python3
-import os, cgi, cgitb
+import os, cgi, cgitb, shelve, uuid, time
+
+params = cgi.FieldStorage()
+mysessionKEY = "mysessionID"
+DBPATH = os.path.expanduser("~/Studium_Medieninformatik_Semester6/Webbasierte-Anwendungen/sessiondata")
+sessionid = params.getvalue(mysessionKEY, str(uuid.uuid4()))
+def show_upload(sid):
+    with shelve.open(DBPATH) as db:
+        username = db[sid].get("name",0)
+        if username != 0:
+            print("Content-Type: text/html")
+            print()
+            print('''<h1>{usrname}</h1>
+                    <form action={contextroot}/login method=POST>
+                        Upload:  <input type="file" name="Data"/>
+                        <input type="submit" value="upload"/>
+                        <input type="hidden" name="{skey}" value="{sval}"/>
+                    </form>'''.format(usrname=username,contextroot=os.environ["SCRIPT_NAME"], skey=mysessionKEY,sval=sessionid))
+        else:
+            show_login()
+                
+
 
 def show_login():
     print("Content-Type: text/html")
     print()
-    print('''<form action={}/login method=POST>
+    print('''<form action={contextroot}/login method=POST>
                 Username:  <input type="text" name="Username"/>
                 Password: <input type="password" name="Password" required/>
                 <input type="submit"/>
-            </form>'''.format(os.environ["SCRIPT_NAME"]))
+                <input type="hidden" name="{skey}" value="{sval}"/>
+            </form>'''.format(contextroot=os.environ["SCRIPT_NAME"], skey=mysessionKEY,sval=sessionid))
 
 def check_login():
-    params = cgi.FieldStorage()
+    
     if params["Password"].value == params["Username"].value[::-1]:
-        print("Content-Type: text/html")
-        print()
-        print("OK")
+        with shelve.open(DBPATH, writeback=True) as db:
+            if sessionid not in db.keys():
+                db[sessionid] = {}
+                db[sessionid]["name"] = params["Username"].value
+                db[sessionid]["logintime"] = time.time()
+            else:
+                db[sessionid]["logintime"] = time.time()
+        show_upload(sessionid)
     else:
         show_login()
 
