@@ -8,18 +8,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/rechner")
-public class Rechner{
-
+public class Rechner {
 
     @GetMapping("/add")
     @ResponseBody
-    public String add(@RequestParam("x") int x, @RequestParam("y") int y){
-        return  String.format("%d + %d ergibt %d", x,y,x+y);
+    public String add(@RequestParam("x") int x, @RequestParam("y") int y) {
+        return String.format("%d + %d ergibt %d", x, y, x + y);
     }
+
     @GetMapping("/mult")
     @ResponseBody
-    public String mult(@RequestParam("x")int x, @RequestParam("y")int y){
-            return String.format("%d * %d ergibt %d", x,y,x*y);
+    public String mult(@RequestParam("x") int x, @RequestParam("y") int y) {
+        return String.format("%d * %d ergibt %d", x, y, x * y);
     }
 }
-
