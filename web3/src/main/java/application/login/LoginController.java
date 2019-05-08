@@ -17,7 +17,7 @@ public class LoginController{
     public String checkLogin(@RequestParam("username")String uname, @RequestParam("password")String pw, Model m){
         if(pw.equals(uname+"!")){
             m.addAttribute("uname", uname);
-            return "sichtungen";
+            return "redirect:/sichtung";
         }
         return "login";
     }

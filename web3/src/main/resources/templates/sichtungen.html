@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-    </head>
-    <body>
-        <h1>Neue Sichtung erfassen</h1>
-        <div style="width: 500px; align-items: center;">
-        <form action="/sichtung" method="POST">
-            <div style="display: inline-block; align-self: center;">
-            <label for="finder">Finder</label> 
-            <input type="text" id="finder" name="finder"/>
-            </div>
-            <div style="display: inline-block; align-self: center;">
-            <label for="place"> Fundort</label> 
-            <input type="text" id="place" name="place"/>
-            </div>
-            <div style="display: inline-block; align-self: center;">
-                <label for="date">Datum</label> 
-                <input type="text" id="date" name="date"/></div>
-            <div style="align-self: center;">
-                 <label for="desc">Beschreibung</label>    
-                 <input type="text" id="desc" name="desc"/>
-            </div>
-            <div style="display: inline-block; align-self: baseline;"> 
-                <input type="submit" id="submit" value="Abschicken" style="position: center"/>
-            </div>
-               
-        </form>
-    </div>
-    <div>
-        <h1>Bisherige Sichtungen:</h1>
-        <table>
-            <thead>
-                <tr style="font-weight: bold;">Datum</span></tr>
-            </thead>
-        </table>
-        
-    </div>
-    </body>
+<head>
+</head>
+<body>
+<h1>Neue Sichtung erfassen</h1>
+<div style="width: 500px; align-items: center;">
+    <form action="#" method="POST"
+          th:action="@{/sichtung}" th:method="POST" th:object="${sichtungsform}">
+        <div style="display: inline-block; align-self: center;">
+            <label for="finder">Finder</label>
+            <input type="text" id="finder" name="finder" th:field="*{finder}"/>
+        </div>
+        <div style="display: inline-block; align-self: center;">
+            <label for="place"> Fundort</label>
+            <input type="text" id="place" name="place" th:field="*{place}"/>
+        </div>
+        <div style="display: inline-block; align-self: center;">
+            <label for="date">Datum</label>
+            <input type="text" id="date" name="date" th:field="*{date}"/>
+        </div>
+        <div style="align-self: center;">
+            <label for="desc">Beschreibung</label>
+            <input type="text" id="desc" name="desc" th:field="*{description}"/>
+        </div>
+        <div style="display: inline-block; align-self: baseline;">
+            <input type="submit" id="submit" value="Abschicken" style="position: center"/>
+        </div>
+
+    </form>
+</div>
+<div>
+    <h1>Bisherige Sichtungen:</h1>
+    <table>
+        <tr th:if="${sichtungsform}" style="font-weight: bold;" th:each="date: ${sichtungsform}">Datum
+            <td th:text="${date}"></td>
+        </tr>
+        <tr style="">Fundort</tr>
+        <tr style="">Finder</tr>
+        <tr style="">Beschreibung</tr>
+        <tr style=""> [edit]</tr>
+    </table>
+
+</div>
+</body>
 </html>
