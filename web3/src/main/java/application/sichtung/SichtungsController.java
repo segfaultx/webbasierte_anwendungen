@@ -1,17 +1,20 @@
 package application.sichtung;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/sichtung")
 @SessionAttributes("sichtungen")
 public class SichtungsController{
 
     @GetMapping("/sichtung")
-    public String showSichtungen(){
+    public String showSichtungen(@ModelAttribute("sichtungsform") Sichtung sichtungsform){
+
         return "sichtungen";
     } 
+    @PostMapping("/sichtung")
+    @ResponseBody
+    public String addSichtung(){
+        return "Hallo";
+    }
 }

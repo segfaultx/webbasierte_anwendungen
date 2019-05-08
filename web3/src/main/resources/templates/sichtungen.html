@@ -5,33 +5,36 @@
     </head>
     <body>
         <h1>Neue Sichtung erfassen</h1>
-        <div style="width: 350px; display: inline-block;">
-        <form>
-            <div>
+        <div style="width: 500px; align-items: center;">
+        <form action="/sichtung" method="POST">
+            <div style="display: inline-block; align-self: center;">
             <label for="finder">Finder</label> 
             <input type="text" id="finder" name="finder"/>
             </div>
-            <div>
+            <div style="display: inline-block; align-self: center;">
             <label for="place"> Fundort</label> 
             <input type="text" id="place" name="place"/>
             </div>
-            <div>
+            <div style="display: inline-block; align-self: center;">
                 <label for="date">Datum</label> 
                 <input type="text" id="date" name="date"/></div>
-            <div>
-                 <label for="desc">
-                        Beschreibung
-                 </label>    
+            <div style="align-self: center;">
+                 <label for="desc">Beschreibung</label>    
                  <input type="text" id="desc" name="desc"/>
             </div>
-            <div> 
+            <div style="display: inline-block; align-self: baseline;"> 
                 <input type="submit" id="submit" value="Abschicken" style="position: center"/>
-               </div>
+            </div>
                
         </form>
     </div>
     <div>
         <h1>Bisherige Sichtungen:</h1>
+        <table>
+            <thead>
+                <tr style="font-weight: bold;">Datum</span></tr>
+            </thead>
+        </table>
         
     </div>
     </body>
