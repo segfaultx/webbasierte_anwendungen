@@ -21,6 +21,7 @@ public class SichtungsController {
 
     @PostMapping("/sichtung")
     @ResponseBody
+    //TODO: responsebody entfernen, htmnl tabelle korrekt befüllen lassen
     public String addSichtung(@ModelAttribute("sichtungsform") Sichtung sichtung, BindingResult result, Model m) {
         if (result.hasErrors()) {
             return "sichtungen";
