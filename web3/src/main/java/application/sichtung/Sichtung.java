@@ -1,10 +1,10 @@
 package application.sichtung;
 
 public class Sichtung {
-    private String date;
-    private String place;
-    private String finder;
-    private String description;
+    String date;
+    String place;
+    String finder;
+    String description;
 
     public Sichtung(String date, String place, String finder, String description){
         this.date = date;

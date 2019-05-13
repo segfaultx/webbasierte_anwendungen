@@ -33,13 +33,22 @@
 <div>
     <h1>Bisherige Sichtungen:</h1>
     <table>
-        <tr th:if="${sichtungsform}" style="font-weight: bold;" th:each="date: ${sichtungsform}">Datum
-            <td th:text="${date}"></td>
+        <thead>
+        <tr>
+            <th>Datum</th>
+            <th style="">Fundort</th>
+            <th style="">Finder</th>
+            <th style="">Beschreibung</th>
+            <th style=""> [edit]</th>
         </tr>
-        <tr style="">Fundort</tr>
-        <tr style="">Finder</tr>
-        <tr style="">Beschreibung</tr>
-        <tr style=""> [edit]</tr>
+        </thead>
+        <tr th:if="${#lists.size(sichtungen) > 0}" th:each="sichtung, status: ${sichtungen.getList()}">
+            <td th:text="${sichtung.date}"> Datum</td>
+            <td th:text="${sichtung.place}">Fundort</td>
+            <td th:text="${sichtung.finder}">Finder</td>
+            <td th:text="${sichtung.description}">Beschreibung</td>
+            <td><a th:href="@{'/sichtung/' + ${status.index}}">[edit]</a></td>
+        </tr>
     </table>
 
 </div>
