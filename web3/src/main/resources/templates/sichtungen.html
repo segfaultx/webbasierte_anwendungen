@@ -9,25 +9,40 @@
     <form action="#" method="POST"
           th:action="@{/sichtung}" th:method="POST" th:object="${sichtungsform}">
         <div style="display: inline-block; align-self: center;">
-            <label for="finder">Finder</label>
-            <input type="text" id="finder" name="finder" th:field="*{finder}"/>
+            <label for="finder">
+                <span>Finder</span>
+                <input type="text" id="finder" name="finder" th:field="*{finder}"/>
+            </label>
         </div>
         <div style="display: inline-block; align-self: center;">
-            <label for="place"> Fundort</label>
-            <input type="text" id="place" name="place" th:field="*{place}"/>
+            <label for="place">
+                <span>Fundort</span>
+                <input type="text" id="place" name="place" th:field="*{place}"/>
+            </label>
+
         </div>
         <div style="display: inline-block; align-self: center;">
-            <label for="date">Datum</label>
-            <input type="text" id="date" name="date" th:field="*{date}"/>
+            <label for="date">
+                <span>Datum</span>
+                <input type="date" id="date" data-date-format="DD MMMM YYYY" name="date" th:field="*{date}"/>
+            </label>
         </div>
         <div style="align-self: center;">
-            <label for="desc">Beschreibung</label>
-            <input type="text" id="desc" name="desc" th:field="*{description}"/>
+            <label for="desc">
+                <span>Beschreibung</span>
+                <input type="text" id="desc" name="desc" th:field="*{description}"/>
+            </label>
+
+        </div>
+        <div th:each="time:*{radiobtns}">
+            <label>
+                <input type="radio" th:value="${time}" th:field="*{day_time}"/>
+            </label>
+            <span th:text="${time}"> Text</span>
         </div>
         <div style="display: inline-block; align-self: baseline;">
             <input type="submit" id="submit" value="Abschicken" style="position: center"/>
         </div>
-
     </form>
 </div>
 <div>
@@ -39,14 +54,16 @@
             <th style="">Fundort</th>
             <th style="">Finder</th>
             <th style="">Beschreibung</th>
+            <th>Tageszeit</th>
             <th style=""> [edit]</th>
         </tr>
         </thead>
         <tr th:if="${#lists.size(sichtungen) > 0}" th:each="sichtung, status: ${sichtungen.getList()}">
-            <td th:text="${sichtung.date}"> Datum</td>
-            <td th:text="${sichtung.place}">Fundort</td>
-            <td th:text="${sichtung.finder}">Finder</td>
-            <td th:text="${sichtung.description}">Beschreibung</td>
+            <td th:text="${sichtung.getDate()}"> Datum</td>
+            <td th:text="${sichtung.getPlace()}">Fundort</td>
+            <td th:text="${sichtung.getFinder()}">Finder</td>
+            <td th:text="${sichtung.getDescription()}">Beschreibung</td>
+            <td th:text="${sichtung.getDay_time()}">Tageszeit</td>
             <td><a th:href="@{'/sichtung/' + ${status.index}}">[edit]</a></td>
         </tr>
     </table>

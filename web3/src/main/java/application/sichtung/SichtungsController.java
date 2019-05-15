@@ -30,9 +30,9 @@ public class SichtungsController {
         if (result.hasErrors()) {
             return "sichtungen";
         }
-        if (!neueSichtung.description.equals("") && !neueSichtung.finder.equals("") && !neueSichtung.place.equals("") && !neueSichtung.date.equals("")) {
+        if (!neueSichtung.getDescription().equals("") && !neueSichtung.getFinder().equals("") && !neueSichtung.getPlace().equals("") && neueSichtung.getDate() != null) {
             sichtungen.add(neueSichtung);
-            m.addAttribute("sichtungsform", new Sichtung(null, null, null, null));
+            m.addAttribute("sichtungsform", new Sichtung(null, null, null, null, null));
         } else {
             m.addAttribute("sichtungsform", neueSichtung);
         }

@@ -1,22 +1,42 @@
 package application.sichtung;
 
-public class Sichtung {
-    String date;
-    String place;
-    String finder;
-    String description;
+import org.springframework.format.annotation.DateTimeFormat;
 
-    public Sichtung(String date, String place, String finder, String description){
+import javax.validation.constraints.PastOrPresent;
+import java.time.LocalDate;
+
+public class Sichtung {
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent
+    private LocalDate date;
+    private String place;
+    private String finder;
+    private String description;
+    private String[] radiobtns = {"morgens", "mittags", "abends"};
+    private String day_time;
+
+    public Sichtung(LocalDate date, String place, String finder, String description, String day_time) {
         this.date = date;
         this.place = place;
         this.finder = finder;
         this.description = description;
-    }
-    public void setDate(String date){
-        this.date = date;
+        this.day_time = day_time;
     }
 
-    public String getDate() {
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+    public String getDay_time(){
+        return day_time;
+    }
+    public String[] getRadiobtns(){
+        return radiobtns;
+    }
+    public void set_Day_time(String day_time){
+        this.day_time = day_time;
+    }
+
+    public LocalDate getDate() {
         return date;
     }
 
@@ -43,7 +63,8 @@ public class Sichtung {
     public String getDescription() {
         return description;
     }
-    public String toString(){
-        return String.format("Datum: %s Ort: %s Finder: %s Beschreibung: %s", this.date,this.place,this.finder,this.description);
+
+    public String toString() {
+        return String.format("Datum: %s Ort: %s Finder: %s Beschreibung: %s", this.date, this.place, this.finder, this.description);
     }
 }
