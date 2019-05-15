@@ -28,13 +28,13 @@ public class SichtungsController {
     }
 
     @PostMapping("/sichtung")
-    public String addSichtung(@Valid @ModelAttribute("sichtung") Sichtung neueSichtung, BindingResult neueSichtungResult,
+    public String addSichtung(@Valid @ModelAttribute("sichtungsform") Sichtung sichtungsform, BindingResult neueSichtungResult,
                               @ModelAttribute("sichtungen") Sichtungen sichtungen, Model m) {
         if (neueSichtungResult.hasErrors()) {
-            m.addAttribute("sichtungsform", neueSichtung);
+            m.addAttribute("sichtungsform", sichtungsform);
             return "sichtungen";
         }
-        sichtungen.add(neueSichtung);
+        sichtungen.add(sichtungsform);
         m.addAttribute("sichtungsform", new Sichtung(null, null, null, null, null));
 
         return "sichtungen";

@@ -3,24 +3,25 @@
 
 <head>
     <style>
-        .fehleryo{
-            border: 1px red;
+        .fehleryo {
+            border: 3px red;
         }
     </style>
 </head>
 <body>
 <h1>Neue Sichtung erfassen</h1>
-<div style="width: 500px; align-items: center;">
+<div>
     <form action="#" method="POST"
           th:action="@{/sichtung}" th:method="POST" th:object="${sichtungsform}">
-        <div style="display: inline-block; align-self: center;">
+        <div>
             <label>
                 <span>Finder</span>
                 <input type="text" th:field="*{finder}" th:errorclass="fehleryo"/>
                 <span th:if="${#fields.hasErrors('finder')}" th:errors="*{finder}">Finderfehler</span>
             </label>
         </div>
-        <div style="display: inline-block; align-self: center;">
+        <br/>
+        <div>
             <label>
                 <span>Fundort</span>
                 <input type="text" th:field="*{place}" th:errorclass="fehleryo"/>
@@ -28,14 +29,16 @@
             </label>
 
         </div>
-        <div style="display: inline-block; align-self: center;">
+        <br/>
+        <div>
             <label>
                 <span>Datum</span>
                 <input type="date" th:field="*{date}" th:errorclass="fehleryo"/>
                 <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Datumsfehler</span>
             </label>
         </div>
-        <div style="align-self: center;">
+        <br/>
+        <div>
             <label>
                 <span>Beschreibung</span>
                 <input type="text" th:field="*{description}" th:errorclass="fehleryo"/>
@@ -53,13 +56,14 @@
             <label>
                 <span>Bewertung</span>
                 <select th:field="*{rating}">
-                    <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}" th:errorclass="fehleryo">Stern
+                    <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}"
+                            th:errorclass="fehleryo">Stern
                     </option>
                 </select>
                 <span th:if="${#fields.hasErrors('rating')}" th:error="*{rating}">Bewertungsfehler</span>
             </label>
         </div>
-        <div style="display: inline-block; align-self: baseline;">
+        <div>
             <input type="submit" id="submit" value="Abschicken" style="position: center"/>
         </div>
     </form>
