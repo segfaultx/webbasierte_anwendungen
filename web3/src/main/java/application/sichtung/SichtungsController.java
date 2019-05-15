@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 @SessionAttributes("sichtungen")
 public class SichtungsController {
@@ -26,16 +28,14 @@ public class SichtungsController {
     }
 
     @PostMapping("/sichtung")
-    public String addSichtung(@ModelAttribute("sichtung") Sichtung neueSichtung, @ModelAttribute("sichtungen") Sichtungen sichtungen, BindingResult result, Model m) {
-        if (result.hasErrors()) {
+    public String addSichtung(@Valid @ModelAttribute("sichtung") Sichtung neueSichtung, BindingResult neueSichtungResult,
+                              @ModelAttribute("sichtungen") Sichtungen sichtungen, Model m) {
+        if (neueSichtungResult.hasErrors()) {
+            m.addAttribute("sichtungsform", neueSichtung);
             return "sichtungen";
         }
-        if (!neueSichtung.getDescription().equals("") && !neueSichtung.getFinder().equals("") && !neueSichtung.getPlace().equals("") && neueSichtung.getDate() != null) {
-            sichtungen.add(neueSichtung);
-            m.addAttribute("sichtungsform", new Sichtung(null, null, null, null, null));
-        } else {
-            m.addAttribute("sichtungsform", neueSichtung);
-        }
+        sichtungen.add(neueSichtung);
+        m.addAttribute("sichtungsform", new Sichtung(null, null, null, null, null));
 
         return "sichtungen";
 

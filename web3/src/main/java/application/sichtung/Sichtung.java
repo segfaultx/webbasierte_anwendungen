@@ -2,19 +2,28 @@ package application.sichtung;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 public class Sichtung {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent
+    @NotNull
     private LocalDate date;
+    @NotNull
+    @Size(min = 3, max = 80, message = "Länge zwischen {min} und {max} nicht erfüllt")
     private String place;
+    @NotNull
+    @Size(min = 3, max = 80)
     private String finder;
+    @NotNull
+    @Size(min = 3, max = 80)
     private String description;
     private String[] radiobtns = {"morgens", "mittags", "abends"};
+    @NotNull
     private String day_time;
     private int[] ratings = {0, 1, 2, 3, 4, 5};
+    @Min(1)
     private int rating;
 
     public Sichtung(LocalDate date, String place, String finder, String description, String day_time) {
