@@ -40,6 +40,15 @@
             </label>
             <span th:text="${time}"> Text</span>
         </div>
+        <div>
+            <label>
+                <span>Bewertung</span>
+                <select th:field="*{rating}">
+                    <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}">Stern
+                    </option>
+                </select>
+            </label>
+        </div>
         <div style="display: inline-block; align-self: baseline;">
             <input type="submit" id="submit" value="Abschicken" style="position: center"/>
         </div>
@@ -55,6 +64,7 @@
             <th style="">Finder</th>
             <th style="">Beschreibung</th>
             <th>Tageszeit</th>
+            <th>Bewertung</th>
             <th style=""> [edit]</th>
         </tr>
         </thead>
@@ -64,6 +74,7 @@
             <td th:text="${sichtung.getFinder()}">Finder</td>
             <td th:text="${sichtung.getDescription()}">Beschreibung</td>
             <td th:text="${sichtung.getDay_time()}">Tageszeit</td>
+            <td th:text="${#strings.repeat('*',sichtung.getRating())}">Bewertung</td>
             <td><a th:href="@{'/sichtung/' + ${status.index}}">[edit]</a></td>
         </tr>
     </table>

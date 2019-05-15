@@ -14,6 +14,8 @@ public class Sichtung {
     private String description;
     private String[] radiobtns = {"morgens", "mittags", "abends"};
     private String day_time;
+    private int[] ratings = {0, 1, 2, 3, 4, 5};
+    private int rating;
 
     public Sichtung(LocalDate date, String place, String finder, String description, String day_time) {
         this.date = date;
@@ -26,13 +28,16 @@ public class Sichtung {
     public void setDate(LocalDate date) {
         this.date = date;
     }
-    public String getDay_time(){
+
+    public String getDay_time() {
         return day_time;
     }
-    public String[] getRadiobtns(){
+
+    public String[] getRadiobtns() {
         return radiobtns;
     }
-    public void set_Day_time(String day_time){
+
+    public void set_Day_time(String day_time) {
         this.day_time = day_time;
     }
 
@@ -46,6 +51,18 @@ public class Sichtung {
 
     public String getPlace() {
         return place;
+    }
+
+    public int[] getRatings() {
+        return ratings;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public void setFinder(String finder) {
