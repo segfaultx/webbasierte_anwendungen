@@ -3,8 +3,11 @@
 
 <head>
     <style>
-        .fehleryo{
+        .fehleryo {
             box-shadow: 0 0 5px red;
+        }
+        select{
+            width: 100%;
         }
     </style>
 </head>
@@ -91,16 +94,14 @@
             </div>
             <tr>
                 <td>
-                    <div>
-                        <label>
-                            <span>Bewertung</span>
-                            <select th:field="*{rating}">
-                                <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}"
-                                        th:errorclass="fehleryo">Stern
-                                </option>
-                            </select>
-                        </label>
-                    </div>
+                    <span>Bewertung</span>
+                </td>
+                <td>
+                    <select th:field="*{rating}">
+                        <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}"
+                                th:errorclass="fehleryo">Stern
+                        </option>
+                    </select>
                 </td>
                 <td>
                     <span th:if="${#fields.hasErrors('rating')}" th:error="*{rating}">Bewertungsfehler</span>
