@@ -35,7 +35,7 @@ public class SichtungsController {
             return "sichtungen";
         }
         sichtungen.add(sichtungsform);
-        m.addAttribute("sichtungsform", new Sichtung(null, null, null, null, null));
+        m.addAttribute("sichtungsform", new Sichtung());
 
         return "sichtungen";
 

@@ -23,15 +23,20 @@ public class Sichtung {
     @NotNull
     private String day_time;
     private int[] ratings = {0, 1, 2, 3, 4, 5};
-    @Min(1)
-    private int rating;
+    @Min(value = 1, message = "Muss mindestens {min} Stern(e) wert sein")
+    private int rating = 0;
 
-    public Sichtung(LocalDate date, String place, String finder, String description, String day_time) {
+    public Sichtung() {
+
+    }
+
+    public Sichtung(LocalDate date, String place, String finder, String description, String day_time, int rating) {
         this.date = date;
         this.place = place;
         this.finder = finder;
         this.description = description;
         this.day_time = day_time;
+        this.rating = rating;
     }
 
     public void setDate(LocalDate date) {
