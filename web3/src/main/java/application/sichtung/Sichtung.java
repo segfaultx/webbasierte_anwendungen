@@ -21,8 +21,8 @@ public class Sichtung {
     @Size(min = 3, max = 80)
     @Siebzehnhaft(message = "Wert muss siebzehnhaft sein!")
     private String description;
-
-    private String[] radiobtns = {"morgens", "mittags", "abends"};
+    @Value("#{${sighting.dayTimes}}")
+    private String[] radiobtns;
     @NotNull
     private String day_time;
     private int[] ratings = {0, 1, 2, 3, 4, 5};
@@ -53,9 +53,10 @@ public class Sichtung {
         return radiobtns;
     }
 
-    public void setDay_time(String day_time){
+    public void setDay_time(String day_time) {
         this.day_time = day_time;
     }
+
     public LocalDate getDate() {
         return date;
     }
@@ -90,6 +91,10 @@ public class Sichtung {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setRadiobtns(String[] radiobtns) {
+        this.radiobtns = radiobtns;
     }
 
     public String getDescription() {
