@@ -1,5 +1,6 @@
 package application.sichtung;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
@@ -20,6 +21,7 @@ public class Sichtung {
     @Size(min = 3, max = 80)
     @Siebzehnhaft(message = "Wert muss siebzehnhaft sein!")
     private String description;
+
     private String[] radiobtns = {"morgens", "mittags", "abends"};
     @NotNull
     private String day_time;
