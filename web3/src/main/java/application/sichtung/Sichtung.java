@@ -7,17 +7,17 @@ import java.time.LocalDate;
 
 public class Sichtung {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @PastOrPresent(message="{date.error}")
-    @NotNull(message="{datenull.error}")
+    @PastOrPresent(message = "{date.error}")
+    @NotNull(message = "{datenull.error}")
     private LocalDate date;
-    @NotNull
+    @NotNull(message="{place.error}")
     @Size(min = 3, max = 80, message = "{place.error}")
     private String place;
     @NotNull
     @Size(min = 3, max = 80, message = "{finder.error}")
     private String finder;
-    @NotNull
-    @Size(min = 3, max = 80)
+    @NotNull(message = "{seventeennull.error}")
+    @Size(min = 3, max = 80, message = "{seventeentoosmall.error}")
     @Siebzehnhaft(message = "{seventeen.error}")
     private String description;
     private String[] radiobtns = {"sighting.morning", "sighting.noon", "sighting.evening"};

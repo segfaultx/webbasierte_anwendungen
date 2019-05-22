@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@SessionAttributes("sichtungen")
+@SessionAttributes(names = {"sichtungen", "langobject"})
 public class SichtungsController {
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
 
@@ -24,6 +24,7 @@ public class SichtungsController {
     public String showSichtungen(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m) {
         logger.info("Sichtungsform: " + sichtungsform);
         m.addAttribute("sichtungsform", sichtungsform);
+        m.addAttribute("langobject", "de");
         return "sichtungen";
     }
 
@@ -45,6 +46,12 @@ public class SichtungsController {
     public String editSichtung(@PathVariable("nr") int nr, Model m, @ModelAttribute("sichtungen") Sichtungen sichtungen) {
         m.addAttribute("sichtungsform", sichtungen.getList().get(nr));
         sichtungen.getList().remove(nr);
+        return "sichtungen";
+    }
+
+    @PostMapping(value = "/sichtung", params = "sprache")
+    public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langobject") String langobject) {
+        m.addAttribute("sichtungsform", sichtungsform);
         return "sichtungen";
     }
 }
