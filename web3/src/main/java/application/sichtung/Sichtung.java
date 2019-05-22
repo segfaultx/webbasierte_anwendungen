@@ -1,6 +1,5 @@
 package application.sichtung;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
@@ -8,22 +7,21 @@ import java.time.LocalDate;
 
 public class Sichtung {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @PastOrPresent
-    @NotNull
+    @PastOrPresent(message="{date.error}")
+    @NotNull(message="{datenull.error}")
     private LocalDate date;
     @NotNull
-    @Size(min = 3, max = 80, message = "Länge zwischen {min} und {max} nicht erfüllt")
+    @Size(min = 3, max = 80, message = "{place.error}")
     private String place;
     @NotNull
-    @Size(min = 3, max = 80)
+    @Size(min = 3, max = 80, message = "{finder.error}")
     private String finder;
     @NotNull
     @Size(min = 3, max = 80)
-    @Siebzehnhaft(message = "Wert muss siebzehnhaft sein!")
+    @Siebzehnhaft(message = "{seventeen.error}")
     private String description;
-    @Value("#{${sighting.dayTimes}}")
-    private String[] radiobtns;
-    @NotNull
+    private String[] radiobtns = {"sighting.morning", "sighting.noon", "sighting.evening"};
+    @NotNull(message = "{daytime.error}")
     private String day_time;
     private int[] ratings = {0, 1, 2, 3, 4, 5};
     private int rating = 0;

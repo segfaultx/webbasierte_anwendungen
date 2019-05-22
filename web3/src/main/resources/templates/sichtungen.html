@@ -87,8 +87,8 @@
                     <td>
 
                         <label>
-                            <input type="radio" th:field="*{day_time}" th:value="${time}"/>
-                            <span th:text="${time}"> Text</span>
+                            <input type="radio" th:field="*{day_time}" th:value="#{${time}}"/>
+                            <span th:text="#{${time}}"> Text</span>
                         </label>
                     </td>
                 </tr>
