@@ -18,12 +18,12 @@ public class Sichtung {
     private String finder;
     @NotNull
     @Size(min = 3, max = 80)
+    @Siebzehnhaft(message = "Wert muss siebzehnhaft sein!")
     private String description;
     private String[] radiobtns = {"morgens", "mittags", "abends"};
     @NotNull
     private String day_time;
     private int[] ratings = {0, 1, 2, 3, 4, 5};
-    @Min(value = 1, message = "Muss mindestens {min} Stern(e) wert sein")
     private int rating = 0;
 
     public Sichtung() {
@@ -51,10 +51,9 @@ public class Sichtung {
         return radiobtns;
     }
 
-    public void set_Day_time(String day_time) {
+    public void setDay_time(String day_time){
         this.day_time = day_time;
     }
-
     public LocalDate getDate() {
         return date;
     }
