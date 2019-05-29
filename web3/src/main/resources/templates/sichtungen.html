@@ -147,10 +147,9 @@
 </body>
 <footer>
     <div>
-        <form th:action="@{'?sprache='+${langobject}}" th:method="POST" th:object="${langobject}">
-            <select>
-                <option th:value="de" th:field="${langobject}">Deutsch</option>
-                <option th:value="en" th:field="${langobject}">English</option>
+        <form th:action="@{'?sprache='+ ${currentLang}}" th:method="POST" th:object="${langObject}">
+            <select th:field="*{currLang}">
+                <option th:each="lang: *{langs}" th:value="${lang}" th:text="${lang}">Sprache</option>
             </select>
             <input type="submit" th:value="#{form.submitButton}">
         </form>
