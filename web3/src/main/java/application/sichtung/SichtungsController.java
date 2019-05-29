@@ -2,6 +2,7 @@ package application.sichtung;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 @SessionAttributes(names = {"sichtungen", "langObject", "currentLang"})
 public class SichtungsController {
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
+    @Autowired
+    SichtungsRepository sichtungsrep;
 
     public class langObject {
         private String[] langs = {"de", "en"};
@@ -61,6 +64,7 @@ public class SichtungsController {
             m.addAttribute("sichtungsform", sichtungsform);
             return "sichtungen";
         }
+        sichtungsrep.save(sichtungsform);
         sichtungen.add(sichtungsform);
         m.addAttribute("sichtungsform", new Sichtung());
 
@@ -76,10 +80,9 @@ public class SichtungsController {
     }
 
     @PostMapping(value = "/sichtung", params = "sprache")
-    public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langObject") langObject langobject, @RequestParam("sprache") String sprache) {
+    public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langObject") langObject langobject) {
         m.addAttribute("sichtungsform", sichtungsform);
         m.addAttribute("currLang", langobject.getCurrLang());
-        sprache = langobject.getCurrLang();
         return "sichtungen";
     }
 }
