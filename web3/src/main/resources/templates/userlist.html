@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Userlist</title>
+</head>
+<body>
+<h1>Users:</h1>
+<form th:action="@{/users/adduser}" th:method="POST">
+    <input type="submit" value="Neuer Nutzer">
+</form>
+
+<table th:object="${userlist}">
+    <thead>
+    <tr>
+        <th>
+            Loginname
+        </th>
+        <th>
+            Fullname
+        </th>
+        <th>
+            Active
+        </th>
+    </tr>
+    <tr th:if="${#lists.size(userlist) > 0}" th:each="user: ${userlist}">
+        <td th:text="*{loginname}">Loginname</td>
+        <td th:text="*{fullname}"> Fullname</td>
+        <td th:text="*{active}"> Active</td>
+    </tr>
+    </thead>
+</table>
+</body>
+</html>
