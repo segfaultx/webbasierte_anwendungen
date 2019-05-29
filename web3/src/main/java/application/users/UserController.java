@@ -24,7 +24,12 @@ public class UserController {
 
     @PostMapping("/adduser")
     @ResponseBody
-    public String showAddUser() {
+    public String addUser() {
         return "Hallo!";
+    }
+
+    @GetMapping("/adduser")
+    public String showAddUser() {
+        return "adduser";
     }
 }
