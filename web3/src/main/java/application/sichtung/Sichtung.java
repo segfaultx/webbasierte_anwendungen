@@ -2,15 +2,25 @@ package application.sichtung;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Sichtung {
+
+@Entity
+public class Sichtung implements Serializable {
+    @Id
+    @GeneratedValue
+    private long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "{date.error}")
     @NotNull(message = "{datenull.error}")
     private LocalDate date;
-    @NotNull(message="{place.error}")
+    @NotNull(message = "{place.error}")
     @Size(min = 3, max = 80, message = "{place.error}")
     private String place;
     @NotNull
@@ -20,9 +30,11 @@ public class Sichtung {
     @Size(min = 3, max = 80, message = "{seventeentoosmall.error}")
     @Siebzehnhaft(message = "{seventeen.error}")
     private String description;
+    @Transient
     private String[] radiobtns = {"sighting.morning", "sighting.noon", "sighting.evening"};
     @NotNull(message = "{daytime.error}")
     private String day_time;
+    @Transient
     private int[] ratings = {0, 1, 2, 3, 4, 5};
     private int rating = 0;
 

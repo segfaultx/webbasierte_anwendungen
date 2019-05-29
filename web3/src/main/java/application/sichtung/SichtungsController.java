@@ -76,9 +76,10 @@ public class SichtungsController {
     }
 
     @PostMapping(value = "/sichtung", params = "sprache")
-    public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langObject") langObject langobject) {
+    public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langObject") langObject langobject, @RequestParam("sprache") String sprache) {
         m.addAttribute("sichtungsform", sichtungsform);
         m.addAttribute("currLang", langobject.getCurrLang());
+        sprache = langobject.getCurrLang();
         return "sichtungen";
     }
 }
