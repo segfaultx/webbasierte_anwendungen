@@ -35,6 +35,11 @@ public class UserController {
         return "redirect:/users";
     }
 
+    @PostMapping("/users")
+    public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
+        return "userlist";
+    }
+
     @GetMapping("/adduser")
     public String showAddUser(Model m) {
         m.addAttribute("newUser", new User());

@@ -9,6 +9,27 @@
 <form th:action="@{/users/adduser}" th:method="GET">
     <input type="submit" th:value="#{adduser.buttonText}">
 </form>
+<form th:action="@{/users}" th:method="POST">
+    <table>
+        <thead>
+        <tr>
+            <td>
+                <h2 th:text="#{userlist.search.header}">Usersearch:</h2>
+            </td>
+        </tr>
+        </thead>
+        <tr>
+            <td>
+                <input type="text" th:name="searchfield">
+            </td>
+            <td>
+                <input type="submit" th:value="#{userlist.search.button}"/>
+            </td>
+        </tr>
+
+
+    </table>
+</form>
 
 <table th:object="${userlist}">
     <thead>
