@@ -44,10 +44,16 @@
             Active
         </th>
     </tr>
-    <tr th:if="${#lists.size(userlist) > 0}" th:each="user: ${userlist}">
+    <tr th:if="${#lists.size(userlist) > 0}" th:each="user, status: ${userlist}">
         <td th:text="${user.getLoginname()}">Loginname</td>
         <td th:text="${user.getFullname()}"> Fullname</td>
         <td th:text="${user.getActive()}"> Active</td>
+        <td>
+            <form th:action="@{'/users/edituser/' + ${status.index}}" METHOD="GET">
+                <input type="submit" th:value="#{edituser.button}"/>
+            </form>
+
+        </td>
     </tr>
     </thead>
 </table>

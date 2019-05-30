@@ -1,7 +1,6 @@
 package application.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,7 +8,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 @SessionAttributes("userlist")
@@ -47,6 +45,13 @@ public class UserController {
     public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
         m.addAttribute("userlist", userrepo.findAllByLoginnameContainingOrFullnameContainingOrderByLoginname(searchexp, searchexp));
         return "userlist";
+    }
+
+    @GetMapping("/edituser/{nr}")
+    public String showEditUser(@PathVariable("nr") int nr, Model m) {
+        m.addAttribute("editUser", userrepo.findAllByOrderByLoginname().get(nr));
+        userrepo.delete(userrepo.findAllByOrderByLoginname().get(nr));
+        return "edituser";
     }
 
     @GetMapping("/adduser")
