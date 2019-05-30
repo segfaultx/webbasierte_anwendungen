@@ -13,4 +13,6 @@ interface UserRepository extends JpaRepository<User, String> {
     User findByFullname(String loginname);
 
     List<User> findAllByOrderByLoginname();
+
+    List<User> findAllByLoginnameContainingOrFullnameContainingOrderByLoginname(String searchexp, String searchexp2);
 }

@@ -2,6 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <style>
+        .fehleryo {
+            box-shadow: 0 0 5px red;
+        }
+    </style>
 </head>
 <body>
 <h1 th:text="#{adduser.header}">Neuen Nutzer hinzufügen</h1>
@@ -9,12 +14,15 @@
     <table>
         <tr>
             <td>
-                <input type="text" name="loginname" th:field="*{loginname}"/>
+                <input type="text" name="loginname" th:field="*{loginname}" th:errorclass="fehleryo"/>
             </td>
             <td>
                 <label th:text="#{adduser.form.loginname}">
                     Loginname
                 </label>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('loginname')}" th:errors="*{loginname}">Usernamefehler</span>
             </td>
         </tr>
         <tr>

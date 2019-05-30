@@ -20,6 +20,7 @@ public class User {
     @NotNull
     private Boolean active = false;
 
+
     public Boolean getActive() {
         return active;
     }
