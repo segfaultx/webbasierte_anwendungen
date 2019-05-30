@@ -24,9 +24,9 @@
         </th>
     </tr>
     <tr th:if="${#lists.size(userlist) > 0}" th:each="user: ${userlist}">
-        <td th:text="*{loginname}">Loginname</td>
-        <td th:text="*{fullname}"> Fullname</td>
-        <td th:text="*{active}"> Active</td>
+        <td th:text="${user.getLoginname()}">Loginname</td>
+        <td th:text="${user.getFullname()}"> Fullname</td>
+        <td th:text="${user.getActive()}"> Active</td>
     </tr>
     </thead>
 </table>

@@ -18,7 +18,7 @@ public class User {
     @NotNull
     private String fullname;
     @NotNull
-    private Boolean active;
+    private Boolean active = false;
 
     public Boolean getActive() {
         return active;
