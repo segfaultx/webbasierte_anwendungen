@@ -50,10 +50,25 @@ public class UserController {
     @GetMapping("/edituser/{nr}")
     public String showEditUser(@PathVariable("nr") int nr, Model m) {
         m.addAttribute("editUser", userrepo.findAllByOrderByLoginname().get(nr));
-        userrepo.delete(userrepo.findAllByOrderByLoginname().get(nr));
+        m.addAttribute("oldUser", userrepo.findAllByOrderByLoginname().get(nr));
         return "edituser";
     }
+    @PostMapping("/edituser")
+    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m){
+        oldUser = edittedUser;
+        userrepo.save(oldUser);
+        m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
+        return "userlist";
 
+
+    }
+
+    @PostMapping("/removeuser/{nr}")
+    public String removeUser(@PathVariable("nr") int nr, Model m){
+        userrepo.delete(userrepo.findAllByOrderByLoginname().get(nr));
+        m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
+        return "redirect:/users";
+    }
     @GetMapping("/adduser")
     public String showAddUser(Model m) {
         m.addAttribute("newUser", new User());
