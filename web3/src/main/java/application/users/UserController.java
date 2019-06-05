@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import application.services.DatabaseService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,19 +26,19 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    UserRepository userrepo;
+    DatabaseService dbservice;
 
     @Value("${fileupload.directory}")
     private String UPLOADDIR;
 
     @ModelAttribute("userlist")
     public void initUserlist(Model m) {
-        m.addAttribute("userlist", userrepo.findAll());
+        m.addAttribute("userlist", dbservice.findAllUsers());
     }
 
     @GetMapping
     public String showUserlist(Model m, @ModelAttribute("userlist") List<User> userlist) {
-        m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
+        m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "userlist";
     }
 
@@ -46,19 +47,21 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "adduser";
         }
-        if (userrepo.findByLoginname(newUser.getLoginname()) != null) {
+        if (dbservice.findUserByLoginname(newUser.getLoginname()) != null) {
             bindingResult.addError(new FieldError("newUser", "loginname", "#{adduser.usernametaken.error}"));
             m.addAttribute("newUser", newUser);
             return "adduser";
         }
-        try {
-            savePicture(newUser.getLoginname(), picture);
-        } catch (IOException ex) {
-            m.addAttribute("newUser", newUser);
-            return "adduser";
+        if (picture.getSize() > 0) {
+            try {
+                savePicture(newUser.getLoginname(), picture);
+            } catch (IOException ex) {
+                m.addAttribute("newUser", newUser);
+                return "adduser";
+            }
         }
-
-        newUser = userrepo.save(newUser);
+        
+        newUser = dbservice.addUser(newUser);
         return "redirect:/users";
     }
 
@@ -88,28 +91,28 @@ public class UserController {
 
     @PostMapping
     public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
-        m.addAttribute("userlist", userrepo.findAllByLoginnameContainingOrFullnameContainingOrderByLoginname(searchexp, searchexp));
+        m.addAttribute("userlist", dbservice.findAllUsersByLoginnameContainingOrFullnameContainingOrderByLoginname(searchexp, searchexp));
         return "userlist";
     }
 
     @GetMapping("/edituser/{nr}")
     public String showEditUser(@PathVariable("nr") int nr, Model m) {
-        m.addAttribute("editUser", userrepo.findAllByOrderByLoginname().get(nr));
-        m.addAttribute("oldUser", userrepo.findAllByOrderByLoginname().get(nr));
+        m.addAttribute("editUser", dbservice.findAllUsersByOrderByLoginname().get(nr));
+        m.addAttribute("oldUser", dbservice.findAllUsersByOrderByLoginname().get(nr));
         return "edituser";
     }
 
     @PostMapping("/edituser")
     public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) {
         oldUser = edittedUser;
-        try{
+        try {
             savePicture(edittedUser.getLoginname(), picture);
-        }catch(IOException ex){
+        } catch (IOException ex) {
             m.addAttribute("editUser", edittedUser);
             return "edituser";
         }
-        userrepo.save(oldUser);
-        m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
+        dbservice.addUser(oldUser);
+        m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "userlist";
 
 
@@ -117,8 +120,8 @@ public class UserController {
 
     @PostMapping("/removeuser/{nr}")
     public String removeUser(@PathVariable("nr") int nr, Model m) {
-        userrepo.delete(userrepo.findAllByOrderByLoginname().get(nr));
-        m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
+        dbservice.deleteUser(dbservice.findAllUsersByOrderByLoginname().get(nr));
+        m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "redirect:/users";
     }
 

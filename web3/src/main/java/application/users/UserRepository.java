@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, String> {
 
     List<User> findByActive(Boolean active);
 
