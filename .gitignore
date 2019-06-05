@@ -28,3 +28,9 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+
+### PICTURES & OTHER STUFF ###
+*.png
+*.jpg
+*.jpeg
+*.gif
