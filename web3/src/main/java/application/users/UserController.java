@@ -6,7 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -28,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/adduser")
-    public String addUser(@ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m) {
+    public String addUser(@ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) {
         if (bindingResult.hasErrors()) {
             return "adduser";
         }
@@ -37,8 +43,23 @@ public class UserController {
             m.addAttribute("newUser", newUser);
             return "adduser";
         }
+        savePicture(newUser.getLoginname(), picture);
         newUser = userrepo.save(newUser);
         return "redirect:/users";
+    }
+
+    private String savePicture(String loginname, MultipartFile picture) {
+        long size = picture.getSize();
+        String status;
+        try {
+            InputStream inp = picture.getInputStream();
+            Path filepath = Paths.get("/tmp/users/uploads", "avatar-" + loginname + ".png");
+            Files.copy(inp, filepath);
+            status = "ok";
+        } catch (IOException ex) {
+            status = ex.getMessage();
+        }
+        return status;
     }
 
     @PostMapping
@@ -53,8 +74,9 @@ public class UserController {
         m.addAttribute("oldUser", userrepo.findAllByOrderByLoginname().get(nr));
         return "edituser";
     }
+
     @PostMapping("/edituser")
-    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m){
+    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m) {
         oldUser = edittedUser;
         userrepo.save(oldUser);
         m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
@@ -64,11 +86,12 @@ public class UserController {
     }
 
     @PostMapping("/removeuser/{nr}")
-    public String removeUser(@PathVariable("nr") int nr, Model m){
+    public String removeUser(@PathVariable("nr") int nr, Model m) {
         userrepo.delete(userrepo.findAllByOrderByLoginname().get(nr));
         m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
         return "redirect:/users";
     }
+
     @GetMapping("/adduser")
     public String showAddUser(Model m) {
         m.addAttribute("newUser", new User());
