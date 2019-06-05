@@ -2,6 +2,10 @@ package application.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,6 +71,21 @@ public class UserController {
         Files.copy(inp, filepath);
     }
 
+    @GetMapping("/image/{name}")
+    public ResponseEntity<Resource> downloadImage(@PathVariable("name") String name) throws IOException {
+        Path path = Paths.get(UPLOADDIR, "avatar-" + name + ".png");
+        if (!Files.exists(path)) {
+            path = Paths.get(UPLOADDIR, "avatar-default.png");
+        }
+        String mimetype = Files.probeContentType(path);
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+        return ResponseEntity.ok()
+                .header(null)
+                .contentLength(resource.contentLength())
+                .contentType(MediaType.parseMediaType(mimetype))
+                .body(resource);
+    }
+
     @PostMapping
     public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
         m.addAttribute("userlist", userrepo.findAllByLoginnameContainingOrFullnameContainingOrderByLoginname(searchexp, searchexp));
@@ -81,8 +100,14 @@ public class UserController {
     }
 
     @PostMapping("/edituser")
-    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m) {
+    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) {
         oldUser = edittedUser;
+        try{
+            savePicture(edittedUser.getLoginname(), picture);
+        }catch(IOException ex){
+            m.addAttribute("editUser", edittedUser);
+            return "edituser";
+        }
         userrepo.save(oldUser);
         m.addAttribute("userlist", userrepo.findAllByOrderByLoginname());
         return "userlist";
