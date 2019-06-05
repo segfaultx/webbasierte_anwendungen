@@ -60,7 +60,7 @@ public class UserController {
                 return "adduser";
             }
         }
-        
+
         newUser = dbservice.addUser(newUser);
         return "redirect:/users";
     }
@@ -119,7 +119,11 @@ public class UserController {
     }
 
     @PostMapping("/removeuser/{nr}")
-    public String removeUser(@PathVariable("nr") int nr, Model m) {
+    public String removeUser(@PathVariable("nr") int nr, Model m) throws IOException {
+        Path path = Paths.get(UPLOADDIR, "avatar-" + dbservice.findAllUsersByOrderByLoginname().get(nr).getLoginname() + ".png");
+        if (Files.exists(path)) {
+            Files.delete(path);
+        }
         dbservice.deleteUser(dbservice.findAllUsersByOrderByLoginname().get(nr));
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "redirect:/users";
