@@ -24,6 +24,7 @@ public class DatabaseService {
     @Value("${fileupload.directory}")
     private String UPLOADDIR;
 
+    // TODO bildservice auslagern
     public User addUser(User user, InputStream inputStream) throws IOException {
         if (inputStream != null) {
             Path filepath = Paths.get(UPLOADDIR, "avatar-" + user.getLoginname() +
