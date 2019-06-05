@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1 th:text="#{edituser.header}">Nutzer bearbeiten <span th:text="*{editUser.loginname}"> Username</span></h1>
-<form method="POST" th:action="@{/users/edituser}" th:object="${editUser}">
+<form method="POST" th:action="@{/users/edituser}" th:object="${editUser}" enctype="multipart/form-data">
     <table>
         <tr>
             <td>

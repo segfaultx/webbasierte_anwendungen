@@ -1,6 +1,7 @@
 package application.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserRepository userrepo;
+
+    @Value("${fileupload.directory}")
+    private String UPLOADDIR;
 
     @ModelAttribute("userlist")
     public void initUserlist(Model m) {
@@ -43,23 +47,24 @@ public class UserController {
             m.addAttribute("newUser", newUser);
             return "adduser";
         }
-        savePicture(newUser.getLoginname(), picture);
+        try {
+            savePicture(newUser.getLoginname(), picture);
+        } catch (IOException ex) {
+            m.addAttribute("newUser", newUser);
+            return "adduser";
+        }
+
         newUser = userrepo.save(newUser);
         return "redirect:/users";
     }
 
-    private String savePicture(String loginname, MultipartFile picture) {
-        long size = picture.getSize();
-        String status;
-        try {
-            InputStream inp = picture.getInputStream();
-            Path filepath = Paths.get("/tmp/users/uploads", "avatar-" + loginname + ".png");
-            Files.copy(inp, filepath);
-            status = "ok";
-        } catch (IOException ex) {
-            status = ex.getMessage();
-        }
-        return status;
+    private void savePicture(String loginname, MultipartFile picture) throws IOException {
+
+        InputStream inp = picture.getInputStream();
+        Path filepath = Paths.get("/home/amatus/Studium_Medieninformatik_Semester6/Webbasierte-Anwendungen/web3/src/main/java/application/users/uploads", "avatar-" + loginname +
+                ".png");
+        System.out.println(Files.exists(filepath));
+        Files.copy(inp, filepath);
     }
 
     @PostMapping
