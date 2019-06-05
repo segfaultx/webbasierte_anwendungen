@@ -132,8 +132,8 @@
             <th th:text="#{form.thEdit}"> [edit]</th>
         </tr>
         </thead>
-        <tr th:if="${#lists.size(sichtungen) > 0}" th:each="sichtung, status: ${sichtungen.getList()}">
-            <td th:text="${sichtung.getDate()}"> Datum</td>
+        <tr th:if="${#lists.size(sichtungen) > 0}" th:each="sichtung, status: ${sichtungen}">
+            <td th:text="*{sichtung.getDate()}"> Datum</td>
             <td th:text="${sichtung.getPlace()}">Fundort</td>
             <td th:text="${sichtung.getFinder()}">Finder</td>
             <td th:text="${sichtung.getDescription()}">Beschreibung</td>

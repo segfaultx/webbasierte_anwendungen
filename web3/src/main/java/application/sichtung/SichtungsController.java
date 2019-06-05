@@ -1,5 +1,6 @@
 package application.sichtung;
 
+import application.services.DatabaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 
 @Controller
 @SessionAttributes(names = {"sichtungen", "langObject", "currentLang"})
 public class SichtungsController {
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
     @Autowired
-    SichtungsRepository sichtungsrep;
+    DatabaseService dbservice;
 
     public class langObject {
         private String[] langs = {"de", "en"};
@@ -41,7 +41,7 @@ public class SichtungsController {
 
     @ModelAttribute("sichtungen")
     public void init_model(Model m) {
-        m.addAttribute("sichtungen", new Sichtungen());
+        m.addAttribute("sichtungen", dbservice.findAllSichtungen());
     }
 
     @ModelAttribute("langObject")
@@ -58,14 +58,13 @@ public class SichtungsController {
     }
 
     @PostMapping("/sichtung")
-    public String addSichtung(@Valid @ModelAttribute("sichtungsform") Sichtung sichtungsform, BindingResult neueSichtungResult,
-                              @ModelAttribute("sichtungen") Sichtungen sichtungen, Model m) {
+    public String addSichtung(@Valid @ModelAttribute("sichtungsform") Sichtung sichtungsform, BindingResult neueSichtungResult, Model m) {
         if (neueSichtungResult.hasErrors()) {
             m.addAttribute("sichtungsform", sichtungsform);
             return "sichtungen";
         }
-        sichtungsrep.save(sichtungsform);
-        sichtungen.add(sichtungsform);
+        dbservice.saveSichtung(sichtungsform);
+        m.addAttribute("sichtungen", dbservice.findAllSichtungen());
         m.addAttribute("sichtungsform", new Sichtung());
 
         return "sichtungen";
@@ -73,9 +72,10 @@ public class SichtungsController {
     }
 
     @GetMapping("/sichtung/{nr}")
-    public String editSichtung(@PathVariable("nr") int nr, Model m, @ModelAttribute("sichtungen") Sichtungen sichtungen) {
-        m.addAttribute("sichtungsform", sichtungen.getList().get(nr));
-        sichtungen.getList().remove(nr);
+    public String editSichtung(@PathVariable("nr") int nr, Model m) {
+        m.addAttribute("sichtungsform", dbservice.findAllSichtungen().get(nr));
+        dbservice.deleteSichtung(dbservice.findAllSichtungen().get(nr));
+        m.addAttribute("sichtungen", dbservice.findAllSichtungen());
         return "sichtungen";
     }
 

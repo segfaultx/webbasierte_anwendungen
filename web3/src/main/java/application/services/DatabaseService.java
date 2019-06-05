@@ -1,11 +1,13 @@
 package application.services;
 
+import application.sichtung.Sichtung;
 import application.sichtung.SichtungsRepository;
 import application.users.User;
 import application.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -42,4 +44,21 @@ public class DatabaseService {
     public void deleteUser(User user) {
         userrepo.delete(user);
     }
+
+    public Sichtung saveSichtung(Sichtung sichtung) {
+        return sichtungsrepo.save(sichtung);
+    }
+
+    public List<Sichtung> findAllSichtungen() {
+        return sichtungsrepo.findAll();
+    }
+
+    public List<Sichtung> findAllSichtungenByDate(LocalDateTime date) {
+        return sichtungsrepo.findByDate(date);
+    }
+
+    public void deleteSichtung(Sichtung sichtung) {
+        sichtungsrepo.delete(sichtung);
+    }
+
 }
