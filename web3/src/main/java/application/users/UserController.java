@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import application.services.DatabaseService;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +30,7 @@ public class UserController {
     @Value("${fileupload.directory}")
     private String UPLOADDIR;
 
+
     @ModelAttribute("userlist")
     public void initUserlist(Model m) {
         m.addAttribute("userlist", dbservice.findAllUsers());
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/adduser")
-    public String addUser(@ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) {
+    public String addUser(@ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) throws IOException {
         if (bindingResult.hasErrors()) {
             return "adduser";
         }
@@ -53,25 +53,11 @@ public class UserController {
             return "adduser";
         }
         if (picture.getSize() > 0) {
-            try {
-                savePicture(newUser.getLoginname(), picture);
-            } catch (IOException ex) {
-                m.addAttribute("newUser", newUser);
-                return "adduser";
-            }
+            dbservice.addUser(newUser, picture.getInputStream());
+        } else {
+            dbservice.addUser(newUser, null);
         }
-
-        newUser = dbservice.addUser(newUser);
         return "redirect:/users";
-    }
-
-    private void savePicture(String loginname, MultipartFile picture) throws IOException {
-
-        InputStream inp = picture.getInputStream();
-        Path filepath = Paths.get("/home/amatus/Studium_Medieninformatik_Semester6/Webbasierte-Anwendungen/web3/src/main/java/application/users/uploads", "avatar-" + loginname +
-                ".png");
-        System.out.println(Files.exists(filepath));
-        Files.copy(inp, filepath);
     }
 
     @GetMapping("/image/{name}")
@@ -103,15 +89,13 @@ public class UserController {
     }
 
     @PostMapping("/edituser")
-    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) {
+    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         oldUser = edittedUser;
-        try {
-            savePicture(edittedUser.getLoginname(), picture);
-        } catch (IOException ex) {
-            m.addAttribute("editUser", edittedUser);
-            return "edituser";
+        if (picture.getSize() > 0) {
+            dbservice.addUser(oldUser, picture.getInputStream());
+        } else {
+            dbservice.addUser(oldUser, null);
         }
-        dbservice.addUser(oldUser);
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "userlist";
 
@@ -120,10 +104,6 @@ public class UserController {
 
     @PostMapping("/removeuser/{nr}")
     public String removeUser(@PathVariable("nr") int nr, Model m) throws IOException {
-        Path path = Paths.get(UPLOADDIR, "avatar-" + dbservice.findAllUsersByOrderByLoginname().get(nr).getLoginname() + ".png");
-        if (Files.exists(path)) {
-            Files.delete(path);
-        }
         dbservice.deleteUser(dbservice.findAllUsersByOrderByLoginname().get(nr));
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "redirect:/users";
