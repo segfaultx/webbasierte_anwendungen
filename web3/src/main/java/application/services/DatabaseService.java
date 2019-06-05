@@ -4,14 +4,8 @@ import application.sichtung.SichtungsRepository;
 import application.users.User;
 import application.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -21,16 +15,7 @@ public class DatabaseService {
     @Autowired
     private SichtungsRepository sichtungsrepo;
 
-    @Value("${fileupload.directory}")
-    private String UPLOADDIR;
-
-    // TODO bildservice auslagern
-    public User addUser(User user, InputStream inputStream) throws IOException {
-        if (inputStream != null) {
-            Path filepath = Paths.get(UPLOADDIR, "avatar-" + user.getLoginname() +
-                    ".png");
-            Files.copy(inputStream, filepath);
-        }
+    public User addUser(User user) {
         return userrepo.save(user);
     }
 
@@ -54,11 +39,7 @@ public class DatabaseService {
         return userrepo.findByActive(activity);
     }
 
-    public void deleteUser(User user) throws IOException {
-        Path path = Paths.get(UPLOADDIR, "avatar-" + user.getLoginname() + ".png");
-        if (Files.exists(path)) {
-            Files.delete(path);
-        }
+    public void deleteUser(User user) {
         userrepo.delete(user);
     }
 }

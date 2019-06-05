@@ -1,5 +1,6 @@
 package application.users;
 
+import application.services.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -15,9 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import application.services.DatabaseService;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
@@ -26,6 +24,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     DatabaseService dbservice;
+
+    @Autowired
+    PictureService pictureservice;
 
     @Value("${fileupload.directory}")
     private String UPLOADDIR;
@@ -52,22 +53,15 @@ public class UserController {
             m.addAttribute("newUser", newUser);
             return "adduser";
         }
-        if (picture.getSize() > 0) {
-            dbservice.addUser(newUser, picture.getInputStream());
-        } else {
-            dbservice.addUser(newUser, null);
-        }
+        if (picture.getSize() > 0) pictureservice.saveUserAvatar(newUser.getLoginname(), picture.getInputStream());
+        dbservice.addUser(newUser);
         return "redirect:/users";
     }
 
     @GetMapping("/image/{name}")
     public ResponseEntity<Resource> downloadImage(@PathVariable("name") String name) throws IOException {
-        Path path = Paths.get(UPLOADDIR, "avatar-" + name + ".png");
-        if (!Files.exists(path)) {
-            path = Paths.get(UPLOADDIR, "avatar-default.png");
-        }
-        String mimetype = Files.probeContentType(path);
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+        String mimetype = pictureservice.getMimeType(name);
+        ByteArrayResource resource = pictureservice.loadUserAvatar(name);
         return ResponseEntity.ok()
                 .header(null)
                 .contentLength(resource.contentLength())
@@ -91,11 +85,8 @@ public class UserController {
     @PostMapping("/edituser")
     public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         oldUser = edittedUser;
-        if (picture.getSize() > 0) {
-            dbservice.addUser(oldUser, picture.getInputStream());
-        } else {
-            dbservice.addUser(oldUser, null);
-        }
+        if (picture.getSize() > 0) pictureservice.saveUserAvatar(oldUser.getLoginname(), picture.getInputStream());
+        dbservice.addUser(oldUser);
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "userlist";
 
@@ -104,6 +95,7 @@ public class UserController {
 
     @PostMapping("/removeuser/{nr}")
     public String removeUser(@PathVariable("nr") int nr, Model m) throws IOException {
+        pictureservice.removeUserAvatar(dbservice.findAllUsersByOrderByLoginname().get(nr).getLoginname());
         dbservice.deleteUser(dbservice.findAllUsersByOrderByLoginname().get(nr));
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "redirect:/users";
