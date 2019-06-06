@@ -34,3 +34,6 @@ HELP.md
 *.jpg
 *.jpeg
 *.gif
+
+## Super folder, ignore project ##
+web3/
