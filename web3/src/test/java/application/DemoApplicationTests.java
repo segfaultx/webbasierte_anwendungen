@@ -1,4 +1,4 @@
-package web.web2.web3;
+package application;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

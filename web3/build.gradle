@@ -5,7 +5,7 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
-group = 'web.web2'
+group = 'web.web3'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '12' 	
 
@@ -19,6 +19,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-dba-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	runtimeOnly 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 }
