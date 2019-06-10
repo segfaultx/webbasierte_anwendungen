@@ -5,6 +5,7 @@ import application.sichtung.SichtungsRepository;
 import application.users.User;
 import application.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,8 +17,11 @@ public class DatabaseService {
     private UserRepository userrepo;
     @Autowired
     private SichtungsRepository sichtungsrepo;
+    @Autowired
+    PasswordEncoder pwenc;
 
     public User addUser(User user) {
+        user.setPassword(pwenc.encode(user.getPassword()));
         return userrepo.save(user);
     }
 

@@ -7,6 +7,8 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +23,7 @@ import java.util.List;
 @Controller
 @SessionAttributes("userlist")
 @RequestMapping("/users")
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserController {
     @Autowired
     DatabaseService dbservice;
@@ -38,12 +41,14 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String showUserlist(Model m, @ModelAttribute("userlist") List<User> userlist) {
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "userlist";
     }
 
     @PostMapping("/adduser")
+    @PreAuthorize("hasRole('ADMIN')")
     public String addUser(@ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) throws IOException {
         if (bindingResult.hasErrors()) {
             return "adduser";
@@ -59,6 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/image/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> downloadImage(@PathVariable("name") String name) throws IOException {
         String mimetype = pictureservice.getMimeType(name);
         ByteArrayResource resource = pictureservice.loadUserAvatar(name);
@@ -70,12 +76,14 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
         m.addAttribute("userlist", dbservice.findAllUsersByLoginnameContainingOrFullnameContainingOrderByLoginname(searchexp, searchexp));
         return "userlist";
     }
 
     @GetMapping("/edituser/{nr}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String showEditUser(@PathVariable("nr") int nr, Model m) {
         m.addAttribute("editUser", dbservice.findAllUsersByOrderByLoginname().get(nr));
         m.addAttribute("oldUser", dbservice.findAllUsersByOrderByLoginname().get(nr));
@@ -83,6 +91,7 @@ public class UserController {
     }
 
     @PostMapping("/edituser")
+    @PreAuthorize("hasRole('ADMIN')")
     public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         oldUser = edittedUser;
         if (picture.getSize() > 0) pictureservice.saveUserAvatar(oldUser.getLoginname(), picture.getInputStream());
@@ -94,6 +103,7 @@ public class UserController {
     }
 
     @PostMapping("/removeuser/{nr}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String removeUser(@PathVariable("nr") int nr, Model m) throws IOException {
         pictureservice.removeUserAvatar(dbservice.findAllUsersByOrderByLoginname().get(nr).getLoginname());
         dbservice.deleteUser(dbservice.findAllUsersByOrderByLoginname().get(nr));

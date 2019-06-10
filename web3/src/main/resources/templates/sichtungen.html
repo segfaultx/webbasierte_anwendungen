@@ -154,5 +154,8 @@
             <input type="submit" th:value="#{form.submitButton}">
         </form>
     </div>
+    <form th:action="@{/logout}" th:method="POST">
+        <input th:type="submit" th:value="#{logout.btntext}">
+    </form>
 </footer>
 </html>

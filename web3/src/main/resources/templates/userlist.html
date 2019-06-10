@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1 th:text="#{userlist.header}">Users:</h1>
+<form th:action="@{/logout}" th:method="POST">
+    <input th:type="submit" th:value="#{logout.btntext}">
+</form>
 <form th:action="@{/users/adduser}" th:method="GET">
     <input type="submit" th:value="#{adduser.buttonText}">
 </form>

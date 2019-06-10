@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-    <head>
-    </head>
-    <body>
-        <h1>Login</h1>
-        <form action="/login" method="POST">
-            <input type="text" name="username"> Username </input><br/>
-            <input type="password" name="password"> Password </input></br>
-            <input type="submit"> Abschicken </input>
-        </form>
-    </body>
+<head>
+</head>
+<body>
+<h1>Login</h1>
+<form th:action="@{/login}" th:method="POST">
+    <input type="text" th:name="username" th:id="username" name="username" id="username"> Username </input><br/>
+    <input type="password" th:name="password" th:id="password" name="password" id="password"> Password </input></br>
+    <input type="submit"> Abschicken </input>
+</form>
+</body>
 </html>
