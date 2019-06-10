@@ -48,7 +48,7 @@ public class PictureService {
 
     public void saveSightingPicture(long id, InputStream inputStream) throws IOException {
         if (inputStream != null) {
-            Path filepath = Paths.get(AVATAR_UPLOADDIR, id + "sighting.png");
+            Path filepath = Paths.get(SIGHTING_UPLOADDIR, "sighting-"+id +".png");
             Files.copy(inputStream, filepath);
         }
     }
