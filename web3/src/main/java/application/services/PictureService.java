@@ -14,33 +14,42 @@ import java.nio.file.Paths;
 @Service
 public class PictureService {
 
-    @Value("${fileupload.directory}")
-    private String UPLOADDIR;
+    @Value("${avatar_fileupload.directory}")
+    private String AVATAR_UPLOADDIR;
+    @Value("${sighting_fileupload.directory}")
+    private String SIGHTING_UPLOADDIR;
 
     public void saveUserAvatar(String username, InputStream inputStream) throws IOException {
         if (inputStream != null) {
-            Path filepath = Paths.get(UPLOADDIR, "avatar-" + username +
+            Path filepath = Paths.get(AVATAR_UPLOADDIR, "avatar-" + username +
                     ".png");
             Files.copy(inputStream, filepath);
         }
     }
 
     public void removeUserAvatar(String username) throws IOException {
-        Path path = Paths.get(UPLOADDIR, "avatar-" + username + ".png");
+        Path path = Paths.get(AVATAR_UPLOADDIR, "avatar-" + username + ".png");
         if (Files.exists(path)) {
             Files.delete(path);
         }
     }
 
     public String getMimeType(String username) throws IOException {
-        Path path = Paths.get(UPLOADDIR, "avatar-" + username + ".png");
+        Path path = Paths.get(AVATAR_UPLOADDIR, "avatar-" + username + ".png");
         if (Files.exists(path)) return Files.probeContentType(path);
-        return Files.probeContentType(Paths.get(UPLOADDIR, "avatar-default.png"));
+        return Files.probeContentType(Paths.get(AVATAR_UPLOADDIR, "avatar-default.png"));
     }
 
     public ByteArrayResource loadUserAvatar(String username) throws IOException {
-        Path path = Paths.get(UPLOADDIR, "avatar-" + username + ".png");
+        Path path = Paths.get(AVATAR_UPLOADDIR, "avatar-" + username + ".png");
         if (Files.exists(path)) return new ByteArrayResource(Files.readAllBytes(path));
-        return new ByteArrayResource(Files.readAllBytes(Paths.get(UPLOADDIR, "avatar-default.png")));
+        return new ByteArrayResource(Files.readAllBytes(Paths.get(AVATAR_UPLOADDIR, "avatar-default.png")));
+    }
+
+    public void saveSightingPicture(long id, InputStream inputStream) throws IOException {
+        if (inputStream != null) {
+            Path filepath = Paths.get(AVATAR_UPLOADDIR, id + "sighting.png");
+            Files.copy(inputStream, filepath);
+        }
     }
 }

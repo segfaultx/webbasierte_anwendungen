@@ -72,5 +72,4 @@ public class DatabaseService {
     public void deleteSichtung(Sichtung sichtung) {
         sichtungsrepo.delete(sichtung);
     }
-
 }

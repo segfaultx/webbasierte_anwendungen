@@ -31,7 +31,7 @@ public class UserController {
     @Autowired
     PictureService pictureservice;
 
-    @Value("${fileupload.directory}")
+    @Value("${avatar_fileupload.directory}")
     private String UPLOADDIR;
 
 

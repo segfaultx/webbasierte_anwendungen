@@ -1,6 +1,7 @@
 package application.sichtung;
 
 import application.services.DatabaseService;
+import application.services.PictureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @SessionAttributes(names = {"sichtungen", "langObject", "currentLang"})
@@ -17,6 +20,9 @@ public class SichtungsController {
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
     @Autowired
     DatabaseService dbservice;
+
+    @Autowired
+    PictureService pictureService;
 
     public class langObject {
         private String[] langs = {"de", "en"};
@@ -84,5 +90,29 @@ public class SichtungsController {
         m.addAttribute("sichtungsform", sichtungsform);
         m.addAttribute("currLang", langobject.getCurrLang());
         return "sichtungen";
+    }
+
+    @GetMapping("/sichtung/edit/{nr}")
+    public String editSightingDetails(@PathVariable("nr") int nr, Model m) {
+        m.addAttribute("detailsSighting", dbservice.findAllSichtungen().get(nr));
+        return "editSighting";
+
+    }
+
+    @PostMapping("/sichtung/edit/{nr}")
+    public String saveSightingDetails(@PathVariable("nr") int nr, Model m, @ModelAttribute("detailsSighting") Sichtung sichtung, MultipartFile picture) throws IOException {
+        if (picture != null && picture.getSize() > 0)
+            pictureService.saveSightingPicture(sichtung.getId(), picture.getInputStream());
+        Sichtung copySichtung = dbservice.findAllSichtungen().get(nr);
+        copySichtung.setDate(sichtung.getDate());
+        copySichtung.setDay_time(sichtung.getDay_time());
+        copySichtung.setDescription(sichtung.getDescription());
+        copySichtung.setFinder(sichtung.getFinder());
+        copySichtung.setPlace(sichtung.getPlace());
+        copySichtung.setRating(sichtung.getRating());
+        m.addAttribute("sichtungsform", new Sichtung());
+        m.addAttribute("sichtungen", dbservice.findAllSichtungen());
+        return "redirect:/sichtung";
+
     }
 }

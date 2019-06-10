@@ -108,6 +108,10 @@ public class Sichtung implements Serializable {
         return description;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String toString() {
         return String.format("Datum: %s Ort: %s Finder: %s Beschreibung: %s", this.date, this.place, this.finder, this.description);
     }

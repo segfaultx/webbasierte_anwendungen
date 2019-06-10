@@ -8,5 +8,4 @@ import java.util.List;
 public interface SichtungsRepository extends JpaRepository<Sichtung,Long> {
 
     List<Sichtung> findByDate(LocalDateTime date);
-
 }

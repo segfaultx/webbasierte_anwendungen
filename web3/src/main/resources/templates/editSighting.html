@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        .fehleryo {
+            box-shadow: 0 0 5px red;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="#{editSighting.header}">Sichtung</h1>
+<form action="#" method="POST"
+      th:action="@{/sichtung/edit}" th:method="POST" th:object="${detailsSighting}">
+    <table>
+        <tr>
+            <div>
+                <label>
+                    <td>
+                        <span th:text="#{form.finder}">Finder</span>
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{finder}" th:errorclass="fehleryo"/>
+                    </td>
+                    <td>
+                        <span th:if="${#fields.hasErrors('finder')}" th:errors="*{finder}">Finderfehler</span>
+                    </td>
+
+                </label>
+            </div>
+        </tr>
+        <tr>
+            <div>
+                <label>
+                    <td>
+                        <span th:text="#{form.place}">Fundort</span>
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{place}" th:errorclass="fehleryo"/>
+                    </td>
+                    <td>
+                        <span th:if="${#fields.hasErrors('place')}" th:errors="*{place}">Ortfehler</span>
+                    </td>
+
+                </label>
+            </div>
+        </tr>
+        <tr>
+            <div>
+                <label>
+                    <td>
+                        <span th:text="#{form.date}">Datum</span>
+                    </td>
+                    <td>
+                        <input type="date" th:field="*{date}" th:errorclass="fehleryo"/>
+                    </td>
+                    <td>
+                        <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Datumsfehler</span>
+                    </td>
+                </label>
+            </div>
+        </tr>
+        <tr>
+            <div>
+                <label>
+                    <td>
+                        <span th:text="#{form.description}">Beschreibung</span>
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{description}" th:errorclass="fehleryo"/>
+                    </td>
+                    <td>
+                        <span th:if="${#fields.hasErrors('description')}"
+                              th:error="*{description}">Beschreibungsfehler</span>
+                    </td>
+                </label>
+            </div>
+        </tr>
+
+        <div th:each="time:*{radiobtns}">
+            <tr>
+                <td>
+
+                    <label>
+                        <input type="radio" th:field="*{day_time}" th:value="#{${time}}"/>
+                        <span th:text="#{${time}}"> Text</span>
+                    </label>
+                </td>
+            </tr>
+        </div>
+        <tr>
+            <td>
+                <span th:text="#{form.rating}">Bewertung</span>
+            </td>
+            <td>
+                <select th:field="*{rating}">
+                    <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}"
+                            th:errorclass="fehleryo">Stern
+                    </option>
+                </select>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('rating')}" th:error="*{rating}">Bewertungsfehler</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" th:name="picture" accept="image/*" th:value="#{editSighting.uploadpicbtn}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <input type="submit" id="submit" th:value="#{form.submitButton}" style="position: center"/>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
