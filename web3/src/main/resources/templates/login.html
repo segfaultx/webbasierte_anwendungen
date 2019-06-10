@@ -6,9 +6,9 @@
 <body>
 <h1>Login</h1>
 <form th:action="@{/login}" th:method="POST">
-    <input type="text" th:name="username" th:id="username" name="username" id="username"> Username </input><br/>
-    <input type="password" th:name="password" th:id="password" name="password" id="password"> Password </input></br>
-    <input type="submit"> Abschicken </input>
+    <input type="text" th:name="username" th:id="username" name="username" id="username" th:text="#{login.username}"/><br/>
+    <input type="password" th:name="password" th:id="password" name="password" id="password" th:text="#{login.password}"/></br>
+    <input type="submit" value="Login"/>
 </form>
 </body>
 </html>
