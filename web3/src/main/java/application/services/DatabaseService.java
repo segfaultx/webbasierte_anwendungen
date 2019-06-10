@@ -1,9 +1,12 @@
 package application.services;
 
 import application.sichtung.Sichtung;
+import application.sichtung.SichtungsController;
 import application.sichtung.SichtungsRepository;
 import application.users.User;
 import application.users.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,10 @@ public class DatabaseService {
     @Autowired
     PasswordEncoder pwenc;
 
+    private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
+
     public User addUser(User user) {
+        user.setUsergroup("MEMBER");
         user.setPassword(pwenc.encode(user.getPassword()));
         return userrepo.save(user);
     }
@@ -38,6 +44,8 @@ public class DatabaseService {
     }
 
     public User findUserByLoginname(String name) {
+        User usr = userrepo.findByLoginname(name);
+        logger.info("USER EXTRACTED: " + usr);
         return userrepo.findByLoginname(name);
     }
 

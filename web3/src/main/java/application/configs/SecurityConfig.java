@@ -1,5 +1,6 @@
 package application.configs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    MyUserDetailsService myUserDetailsService;
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -34,6 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .withUser("h2")
             .password("h2")
             .roles("USER","ADMIN");
+        auth
+                .userDetailsService(myUserDetailsService)
+                .passwordEncoder(getPasswordEncoder());
     }
 
     @Override

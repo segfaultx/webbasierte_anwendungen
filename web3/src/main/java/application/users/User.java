@@ -20,6 +20,8 @@ public class User {
     @NotNull
     private Boolean active = false;
 
+    private String usergroup;
+
 
     public Boolean getActive() {
         return active;
@@ -51,5 +53,12 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUsergroup() {
+        return usergroup;
+    }
+    public void setUsergroup(String usergroup){
+        this.usergroup = usergroup;
     }
 }
