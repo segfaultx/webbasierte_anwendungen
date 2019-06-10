@@ -95,21 +95,23 @@ public class SichtungsController {
     @GetMapping("/sichtung/edit/{nr}")
     public String editSightingDetails(@PathVariable("nr") int nr, Model m) {
         m.addAttribute("detailsSighting", dbservice.findAllSichtungen().get(nr));
+        m.addAttribute("nr", nr);
         return "editSighting";
 
     }
 
     @PostMapping("/sichtung/edit/{nr}")
-    public String saveSightingDetails(@PathVariable("nr") int nr, Model m, @ModelAttribute("detailsSighting") Sichtung sichtung, MultipartFile picture) throws IOException {
+    public String saveSightingDetails(@PathVariable("nr") int nr , Model m, @ModelAttribute("detailsSighting") Sichtung sichtung, MultipartFile picture) throws IOException {
         if (picture != null && picture.getSize() > 0)
             pictureService.saveSightingPicture(sichtung.getId(), picture.getInputStream());
-        Sichtung copySichtung = dbservice.findAllSichtungen().get(nr);
-        copySichtung.setDate(sichtung.getDate());
-        copySichtung.setDay_time(sichtung.getDay_time());
-        copySichtung.setDescription(sichtung.getDescription());
-        copySichtung.setFinder(sichtung.getFinder());
-        copySichtung.setPlace(sichtung.getPlace());
-        copySichtung.setRating(sichtung.getRating());
+        Sichtung savesichtung = dbservice.findAllSichtungen().get(nr);
+        savesichtung.setRating(sichtung.getRating());
+        savesichtung.setPlace(sichtung.getPlace());
+        savesichtung.setFinder(sichtung.getFinder());
+        savesichtung.setDescription(sichtung.getDescription());
+        savesichtung.setDay_time(sichtung.getDay_time());
+        savesichtung.setDate(sichtung.getDate());
+        dbservice.saveSichtung(savesichtung);
         m.addAttribute("sichtungsform", new Sichtung());
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());
         return "redirect:/sichtung";

@@ -72,4 +72,8 @@ public class DatabaseService {
     public void deleteSichtung(Sichtung sichtung) {
         sichtungsrepo.delete(sichtung);
     }
+
+    public Sichtung findSichtungByID(long id) {
+        return sichtungsrepo.getOne(id);
+    }
 }
