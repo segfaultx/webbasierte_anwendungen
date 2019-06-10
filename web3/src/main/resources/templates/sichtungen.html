@@ -14,6 +14,12 @@
 </head>
 <body>
 <h1 th:text="#{form.header}">Neue Sichtung erfassen</h1>
+<div sec:authorize="hasRole('ADMIN')">
+    <form th:action="@{/users}" th:method="GET">
+        <input th:type="submit" th:value="#{usermanagement.btntext}">
+    </form>
+</div>
+</div>
 <div>
     <form action="#" method="POST"
           th:action="@{/sichtung}" th:method="POST" th:object="${sichtungsform}">
