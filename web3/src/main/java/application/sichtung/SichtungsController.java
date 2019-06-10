@@ -5,6 +5,10 @@ import application.services.PictureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -98,6 +102,16 @@ public class SichtungsController {
         m.addAttribute("nr", nr);
         return "editSighting";
 
+    }
+    @GetMapping("/sichtung/image/{nr}")
+    public ResponseEntity<Resource> downloadImage(@PathVariable("nr") int nr) throws IOException {
+        String mimetype = pictureService.getMimeTypeSighting(nr);
+        ByteArrayResource resource = pictureService.loadSightingPicture(nr);
+        return ResponseEntity.ok()
+                .header(null)
+                .contentLength(resource.contentLength())
+                .contentType(MediaType.parseMediaType(mimetype))
+                .body(resource);
     }
 
     @PostMapping("/sichtung/edit/{nr}")
