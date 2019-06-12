@@ -2,7 +2,6 @@ package application.users;
 
 import application.services.DatabaseService;
 import application.services.PictureService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -104,11 +103,8 @@ public class UserController {
         }
 
         if (picture.getSize() > 0) pictureservice.saveUserAvatar(edittedUser.getLoginname(), picture.getInputStream());
-        User copyUser = dbservice.findUserByLoginname(oldUser.getLoginname());
-        BeanUtils.copyProperties(edittedUser, copyUser);
-        dbservice.addUser(copyUser);
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
-        return "users/userlist";
+        return "redirect:/users";
 
 
     }

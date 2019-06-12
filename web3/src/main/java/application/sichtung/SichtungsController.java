@@ -115,7 +115,7 @@ public class SichtungsController {
     }
 
     @PostMapping("/sichtung/edit/{nr}")
-    public String saveSightingDetails(@PathVariable("nr") int nr , Model m, @ModelAttribute("detailsSighting") Sichtung sichtung, MultipartFile picture) throws IOException {
+    public String saveSightingDetails(@PathVariable("nr") int nr , Model m, @ModelAttribute("detailsSighting") Sichtung sichtung, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         if (picture != null && picture.getSize() > 0)
             pictureService.saveSightingPicture(nr, picture.getInputStream());
         Sichtung savesichtung = dbservice.findAllSichtungen().get(nr);

@@ -3,6 +3,7 @@ package application.users;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -23,7 +24,8 @@ public class User {
     private String fullname;
     @NotNull
     private Boolean active = false;
-
+    @GeneratedValue
+    private long id;
     private String usergroup;
 
     public User(){
@@ -72,5 +74,13 @@ public class User {
     }
     public void setUsergroup(String usergroup){
         this.usergroup = usergroup;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
