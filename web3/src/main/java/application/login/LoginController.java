@@ -14,4 +14,7 @@ public class LoginController {
     public String showLogin() {
         return "login";
     }
+
+    @GetMapping("/")
+    public String swapToLogin(){ return "login";}
 }
