@@ -11,7 +11,7 @@
 <body>
 <h1 th:text="#{editSighting.header}">Sichtung</h1>
 <form action="#" method="POST"
-      th:action="@{'/sichtung/edit/' + ${nr}}" th:method="POST" th:object="${detailsSighting}" enctype="multipart/form-data">
+      th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()}}" th:method="POST" th:object="${detailsSighting}" enctype="multipart/form-data">
     <table>
         <tr>
             <div>

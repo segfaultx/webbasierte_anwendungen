@@ -148,7 +148,7 @@
             <td th:text="${#strings.repeat('*',sichtung.getRating())}">Bewertung</td>
             <td><a th:href="@{'/sichtung/' + ${status.index}}"><span th:text="#{form.thEdit}">[edit]</span></a></td>
             <td>
-                    <form th:action="@{'/sichtung/edit/' + ${status.index} }" th:method="GET">
+                    <form th:action="@{'/sichtung/edit/' + ${sichtung.getId()} }" th:method="GET">
                         <input th:type="submit" th:value="#{sightingDetails.btntext}">
                     </form>
             </td>

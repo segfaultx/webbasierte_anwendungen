@@ -97,12 +97,14 @@ public class SichtungsController {
     }
 
     @GetMapping("/sichtung/edit/{nr}")
-    public String editSightingDetails(@PathVariable("nr") int nr, Model m) {
-        m.addAttribute("detailsSighting", dbservice.findAllSichtungen().get(nr));
+    public String editSightingDetails(@PathVariable("nr") long nr, Model m) {
+        Sichtung editSichtung = dbservice.findSichtungByID(nr);
+        m.addAttribute("detailsSighting", editSichtung);
         m.addAttribute("nr", nr);
         return "editSighting";
 
     }
+
     @GetMapping("/sichtung/image/{nr}")
     public ResponseEntity<Resource> downloadImage(@PathVariable("nr") int nr) throws IOException {
         String mimetype = pictureService.getMimeTypeSighting(nr);
@@ -115,16 +117,20 @@ public class SichtungsController {
     }
 
     @PostMapping("/sichtung/edit/{nr}")
-    public String saveSightingDetails(@PathVariable("nr") int nr , Model m, @ModelAttribute("detailsSighting") Sichtung sichtung, @RequestAttribute("picture") MultipartFile picture) throws IOException {
+    public String saveSightingDetails(@PathVariable("nr")long nr,  Model m, @Valid @ModelAttribute("detailsSighting") Sichtung sichtung, BindingResult bindingResult, @RequestAttribute("picture") MultipartFile picture) throws IOException {
+        if (bindingResult.hasErrors()) {
+            m.addAttribute("detailsSighting", sichtung);
+            return "editSighting";
+        }
         if (picture != null && picture.getSize() > 0)
             pictureService.saveSightingPicture(nr, picture.getInputStream());
-        Sichtung savesichtung = dbservice.findAllSichtungen().get(nr);
-        savesichtung.setRating(sichtung.getRating());
-        savesichtung.setPlace(sichtung.getPlace());
-        savesichtung.setFinder(sichtung.getFinder());
-        savesichtung.setDescription(sichtung.getDescription());
-        savesichtung.setDay_time(sichtung.getDay_time());
+        Sichtung savesichtung = dbservice.findSichtungByID(nr);
         savesichtung.setDate(sichtung.getDate());
+        savesichtung.setDay_time(sichtung.getDay_time());
+        savesichtung.setDescription(sichtung.getDescription());
+        savesichtung.setFinder(sichtung.getFinder());
+        savesichtung.setPlace(sichtung.getPlace());
+        savesichtung.setRating(sichtung.getRating());
         dbservice.saveSichtung(savesichtung);
         m.addAttribute("sichtungsform", new Sichtung());
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());

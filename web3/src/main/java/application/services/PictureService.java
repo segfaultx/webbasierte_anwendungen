@@ -46,14 +46,14 @@ public class PictureService {
         return new ByteArrayResource(Files.readAllBytes(Paths.get(AVATAR_UPLOADDIR, "avatar-default.png")));
     }
 
-    public void saveSightingPicture(int id, InputStream inputStream) throws IOException {
+    public void saveSightingPicture(long id, InputStream inputStream) throws IOException {
         if (inputStream != null) {
             Path filepath = Paths.get(SIGHTING_UPLOADDIR, "sighting-" + id + ".png");
             Files.copy(inputStream, filepath);
         }
     }
 
-    public ByteArrayResource loadSightingPicture(int id) throws IOException {
+    public ByteArrayResource loadSightingPicture(long id) throws IOException {
         Path path = Paths.get(SIGHTING_UPLOADDIR, "sighting-" + id + ".png");
         if (Files.exists(path)) return new ByteArrayResource(Files.readAllBytes(path));
         return new ByteArrayResource(Files.readAllBytes(Paths.get(SIGHTING_UPLOADDIR, "sighting_default.png")));
