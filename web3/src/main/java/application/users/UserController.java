@@ -1,6 +1,8 @@
 package application.users;
 
+import application.services.DatabaseService;
 import application.services.PictureService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -15,8 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import application.services.DatabaseService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -44,19 +46,20 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public String showUserlist(Model m, @ModelAttribute("userlist") List<User> userlist) {
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
-        return "userlist";
+        return "users/userlist";
     }
 
     @PostMapping("/adduser")
     @PreAuthorize("hasRole('ADMIN')")
-    public String addUser(@ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) throws IOException {
+    public String addUser(@Valid @ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) throws IOException {
         if (bindingResult.hasErrors()) {
-            return "adduser";
+            m.addAttribute("newUser", newUser);
+            return "users/adduser";
         }
         if (dbservice.findUserByLoginname(newUser.getLoginname()) != null) {
             bindingResult.addError(new FieldError("newUser", "loginname", "#{adduser.usernametaken.error}"));
             m.addAttribute("newUser", newUser);
-            return "adduser";
+            return "users/adduser";
         }
         if (picture.getSize() > 0) pictureservice.saveUserAvatar(newUser.getLoginname(), picture.getInputStream());
         dbservice.addUser(newUser);
@@ -79,25 +82,33 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
         m.addAttribute("userlist", dbservice.findAllUsersByLoginnameContainingOrFullnameContainingOrderByLoginname(searchexp, searchexp));
-        return "userlist";
+        return "users/userlist";
     }
 
     @GetMapping("/edituser/{nr}")
     @PreAuthorize("hasRole('ADMIN')")
     public String showEditUser(@PathVariable("nr") int nr, Model m) {
-        m.addAttribute("editUser", dbservice.findAllUsersByOrderByLoginname().get(nr));
-        m.addAttribute("oldUser", dbservice.findAllUsersByOrderByLoginname().get(nr));
-        return "edituser";
+        User originalUser = dbservice.findAllUsersByOrderByLoginname().get(nr);
+        User editUser = new User(originalUser.getLoginname(),originalUser.getPassword(),originalUser.getFullname());
+        m.addAttribute("editUser", editUser);
+        m.addAttribute("oldUser", originalUser);
+        return "users/edituser";
     }
 
     @PostMapping("/edituser")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateUser(@ModelAttribute("oldUser") User oldUser, @ModelAttribute("editUser") User edittedUser, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
-        oldUser = edittedUser;
-        if (picture.getSize() > 0) pictureservice.saveUserAvatar(oldUser.getLoginname(), picture.getInputStream());
-        dbservice.addUser(oldUser);
+    public String updateUser(@ModelAttribute("oldUser")User oldUser, @Valid @ModelAttribute("editUser") User edittedUser, BindingResult bindingResult, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
+        if(bindingResult.hasErrors()){
+            m.addAttribute("editUser", edittedUser);
+            return "users/edituser";
+        }
+
+        if (picture.getSize() > 0) pictureservice.saveUserAvatar(edittedUser.getLoginname(), picture.getInputStream());
+        User copyUser = dbservice.findUserByLoginname(oldUser.getLoginname());
+        BeanUtils.copyProperties(edittedUser, copyUser);
+        dbservice.addUser(copyUser);
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
-        return "userlist";
+        return "users/userlist";
 
 
     }
@@ -114,6 +125,6 @@ public class UserController {
     @GetMapping("/adduser")
     public String showAddUser(Model m) {
         m.addAttribute("newUser", new User());
-        return "adduser";
+        return "users/adduser";
     }
 }
