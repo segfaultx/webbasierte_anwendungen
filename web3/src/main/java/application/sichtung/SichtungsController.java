@@ -64,7 +64,7 @@ public class SichtungsController {
         logger.info("Sichtungsform: " + sichtungsform);
         m.addAttribute("sichtungsform", sichtungsform);
         m.addAttribute("currentLang", "de");
-        return "sichtungen";
+        return "sichtung/sichtungen";
     }
 
     @PostMapping("/sichtung")
@@ -77,7 +77,7 @@ public class SichtungsController {
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());
         m.addAttribute("sichtungsform", new Sichtung());
 
-        return "sichtungen";
+        return "sichtung/sichtungen";
 
     }
 
@@ -86,14 +86,14 @@ public class SichtungsController {
         m.addAttribute("sichtungsform", dbservice.findAllSichtungen().get(nr));
         dbservice.deleteSichtung(dbservice.findAllSichtungen().get(nr));
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());
-        return "sichtungen";
+        return "sichtung/sichtungen";
     }
 
     @PostMapping(value = "/sichtung", params = "sprache")
     public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langObject") langObject langobject) {
         m.addAttribute("sichtungsform", sichtungsform);
         m.addAttribute("currLang", langobject.getCurrLang());
-        return "sichtungen";
+        return "sichtung/sichtungen";
     }
 
     @GetMapping("/sichtung/edit/{nr}")
@@ -101,7 +101,7 @@ public class SichtungsController {
         Sichtung editSichtung = dbservice.findSichtungByID(nr);
         m.addAttribute("detailsSighting", editSichtung);
         m.addAttribute("nr", nr);
-        return "editSighting";
+        return "sichtung/editSighting";
 
     }
 
@@ -120,7 +120,7 @@ public class SichtungsController {
     public String saveSightingDetails(@PathVariable("nr")long nr,  Model m, @Valid @ModelAttribute("detailsSighting") Sichtung sichtung, BindingResult bindingResult, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         if (bindingResult.hasErrors()) {
             m.addAttribute("detailsSighting", sichtung);
-            return "editSighting";
+            return "sichtung/editSighting";
         }
         if (picture != null && picture.getSize() > 0)
             pictureService.saveSightingPicture(nr, picture.getInputStream());

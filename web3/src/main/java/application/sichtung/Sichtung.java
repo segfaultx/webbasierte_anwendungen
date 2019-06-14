@@ -3,9 +3,12 @@ package application.sichtung;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -34,6 +37,9 @@ public class Sichtung implements Serializable {
     @Transient
     private int[] ratings = {0, 1, 2, 3, 4, 5};
     private int rating = 0;
+
+    @OneToMany(mappedBy="sichtung")
+    private List<Comment> commentList;
 
     public Sichtung() {
 

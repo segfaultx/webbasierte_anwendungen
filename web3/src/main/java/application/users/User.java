@@ -1,26 +1,25 @@
 package application.users;
 
+import application.sichtung.Comment;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "USERS")
 @Validated
 public class User {
     @Id
-    @Size(min=3, max=80)
+    @Size(min = 3, max = 80)
     private String loginname;
     @NotNull
-    @Size(min=3, max=80)
+    @Size(min = 3, max = 80)
     private String password;
     @NotNull
-    @Size(min=3, max=80)
+    @Size(min = 3, max = 80)
     private String fullname;
     @NotNull
     private Boolean active = false;
@@ -28,13 +27,17 @@ public class User {
     private long id;
     private String usergroup;
 
-    public User(){
+    @OneToMany(mappedBy="creator")
+    private List<Comment> commentList;
+
+    public User() {
 
     }
-    public User(String loginname, String password, String fullname){
-        this.loginname=loginname;
-        this.password=password;
-        this.fullname=fullname;
+
+    public User(String loginname, String password, String fullname) {
+        this.loginname = loginname;
+        this.password = password;
+        this.fullname = fullname;
     }
 
     public Boolean getActive() {
@@ -72,7 +75,8 @@ public class User {
     public String getUsergroup() {
         return usergroup;
     }
-    public void setUsergroup(String usergroup){
+
+    public void setUsergroup(String usergroup) {
         this.usergroup = usergroup;
     }
 
