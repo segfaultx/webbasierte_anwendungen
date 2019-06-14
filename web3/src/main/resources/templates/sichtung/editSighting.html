@@ -11,7 +11,8 @@
 <body>
 <h1 th:text="#{editSighting.header}">Sichtung</h1>
 <form action="#" method="POST"
-      th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()}}" th:method="POST" th:object="${detailsSighting}" enctype="multipart/form-data">
+      th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()}}" th:method="POST" th:object="${detailsSighting}"
+      enctype="multipart/form-data">
     <table>
         <tr>
             <div>
@@ -46,19 +47,16 @@
             </div>
         </tr>
         <tr>
-            <div>
-                <label>
-                    <td>
-                        <span th:text="#{form.date}">Datum</span>
-                    </td>
-                    <td>
-                        <input type="date" th:field="*{date}" th:errorclass="fehleryo"/>
-                    </td>
-                    <td>
-                        <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Datumsfehler</span>
-                    </td>
-                </label>
-            </div>
+
+            <td>
+                <span th:text="#{form.date}">Datum</span>
+            </td>
+            <td>
+                <input type="date" th:field="*{date}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Datumsfehler</span>
+            </td>
         </tr>
         <tr>
             <div>
@@ -123,13 +121,15 @@
     </table>
 </form>
 <div>
-    <form th:if="${#lists.size(detailsSighting.getCommentList())>0}" th:each="comment, status : ${detailsSighting.getCommentList()}">
+    <form th:if="${#lists.size(detailsSighting.getCommentList())>0}"
+          th:each="comment, status : ${detailsSighting.getCommentList()}">
         <table>
             <tr>
                 <td>
                     <label>
                         <b th:text="#{comments.user}+ ': '"> user</b> <span th:text="${comment.getFullname()}+' ' ">fullname</span>
-                        <b th:text="#{comments.date} +' ' "> date</b> <span th:text="${comment.getCreationDate()}">date</span>
+                        <b th:text="#{comments.date} +' ' "> date</b> <span
+                            th:text="${comment.getCreationDate()}">date</span>
                     </label>
                 </td>
                 <td th:if="${principal} ne null">

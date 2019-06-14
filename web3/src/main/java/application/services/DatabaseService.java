@@ -1,8 +1,6 @@
 package application.services;
 
-import application.sichtung.Sichtung;
-import application.sichtung.SichtungsController;
-import application.sichtung.SichtungsRepository;
+import application.sichtung.*;
 import application.users.User;
 import application.users.UserRepository;
 import org.slf4j.Logger;
@@ -22,6 +20,8 @@ public class DatabaseService {
     private SichtungsRepository sichtungsrepo;
     @Autowired
     PasswordEncoder pwenc;
+    @Autowired
+    private CommentRepository commentRepository;
 
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
 
@@ -75,5 +75,14 @@ public class DatabaseService {
 
     public Sichtung findSichtungByID(long id) {
         return sichtungsrepo.getOne(id);
+    }
+    public void addComment(Comment comment){
+        commentRepository.save(comment);
+    }
+    public void removeComment(Comment comment){
+        commentRepository.delete(comment);
+    }
+    public Comment findCommentByID(long id){
+        return commentRepository.getOne(id);
     }
 }
