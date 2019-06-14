@@ -15,13 +15,16 @@ import java.time.LocalDate;
 public class Comment {
     @Id
     @GeneratedValue
-    private long comment_id;
+    @NotNull
+    private long commentId;
     @NotNull
     @Size(min=2, max=80)
     private String message;
     @ManyToOne
+    @NotNull
     private User creator;
     @ManyToOne
+    @NotNull
     private Sichtung sichtung;
 
     @NotNull
@@ -31,7 +34,7 @@ public class Comment {
     private LocalDate creationDate;
 
     public long getComment_id() {
-        return comment_id;
+        return commentId;
     }
 
     public Sichtung getSichtung() {
@@ -47,7 +50,7 @@ public class Comment {
     }
 
     public void setComment_id(long comment_id) {
-        this.comment_id = comment_id;
+        this.commentId = comment_id;
     }
 
     public void setCreator(User creator) {

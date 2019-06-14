@@ -1,18 +1,21 @@
 package application.sichtung;
 
+import application.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    public Comment findCommentByComment_idAndAndSichtung();
+    public Comment findByCommentIdAndCreator(long id, User creator);
 
-    public Comment findCommentByComment_idAndCreator();
+    public Comment findCommentByCommentIdAndCreator(long id, User creator);
 
-    public Comment findCommentByComment_idAndCreatorAndSichtung();
+    public Comment findCommentByCommentIdAndCreatorAndSichtung(long id, User creator, Sichtung sichtung);
 
-    public List<Comment> findAllBySichtung();
+    public List<Comment> findAllBySichtung(Sichtung sichtung);
 
-    public List<Comment> findAllOrderByCreationDate();
+    public List <Comment> findAllBySichtungOrderByCreationDateDesc(Sichtung sichtung);
+
+    public List<Comment> findAllByOrderByCreationDate();
 }

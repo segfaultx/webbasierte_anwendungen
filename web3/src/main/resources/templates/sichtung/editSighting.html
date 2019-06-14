@@ -14,37 +14,29 @@
       th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()}}" th:method="POST" th:object="${detailsSighting}"
       enctype="multipart/form-data">
     <table>
+        <input type="hidden" name="id" th:field="*{id}"/>
         <tr>
-            <div>
-                <label>
-                    <td>
-                        <span th:text="#{form.finder}">Finder</span>
-                    </td>
-                    <td>
-                        <input type="text" th:field="*{finder}" th:errorclass="fehleryo"/>
-                    </td>
-                    <td>
-                        <span th:if="${#fields.hasErrors('finder')}" th:errors="*{finder}">Finderfehler</span>
-                    </td>
+            <td>
+                <span th:text="#{form.finder}">Finder</span>
+            </td>
+            <td>
+                <input type="text" th:field="*{finder}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('finder')}" th:errors="*{finder}">Finderfehler</span>
+            </td>
 
-                </label>
-            </div>
         </tr>
         <tr>
-            <div>
-                <label>
-                    <td>
-                        <span th:text="#{form.place}">Fundort</span>
-                    </td>
-                    <td>
-                        <input type="text" th:field="*{place}" th:errorclass="fehleryo"/>
-                    </td>
-                    <td>
-                        <span th:if="${#fields.hasErrors('place')}" th:errors="*{place}">Ortfehler</span>
-                    </td>
-
-                </label>
-            </div>
+            <td>
+                <span th:text="#{form.place}">Fundort</span>
+            </td>
+            <td>
+                <input type="text" th:field="*{place}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('place')}" th:errors="*{place}">Ortfehler</span>
+            </td>
         </tr>
         <tr>
 
@@ -59,20 +51,18 @@
             </td>
         </tr>
         <tr>
-            <div>
-                <label>
-                    <td>
-                        <span th:text="#{form.description}">Beschreibung</span>
-                    </td>
-                    <td>
-                        <input type="text" th:field="*{description}" th:errorclass="fehleryo"/>
-                    </td>
-                    <td>
+
+            <td>
+                <span th:text="#{form.description}">Beschreibung</span>
+            </td>
+            <td>
+                <input type="text" th:field="*{description}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
                         <span th:if="${#fields.hasErrors('description')}"
                               th:error="*{description}">Beschreibungsfehler</span>
-                    </td>
-                </label>
-            </div>
+            </td>
+
         </tr>
 
         <div th:each="time:*{radiobtns}">
@@ -121,8 +111,10 @@
     </table>
 </form>
 <div>
-    <form th:if="${#lists.size(detailsSighting.getCommentList())>0}"
-          th:each="comment, status : ${detailsSighting.getCommentList()}">
+    <form th:if="${#lists.size(sightingCommentList)>0}"
+          th:each="comment, status : ${sightingCommentList}" method="POST"
+          th:action="@{'/sichtung/edit/'+ ${detailsSighting.getId()} + '/deletecomment/' + ${comment.getComment_id()}}" th:object="${detailsSighting}">
+        <input type="hidden" name="id" th:field="*{id}"/>
         <table>
             <tr>
                 <td>
@@ -148,7 +140,7 @@
             </tr>
         </table>
     </form>
-    <form sec:authorize="hasRole('MEMBER') or hasRole('ADMIN')">
+    <form sec:authorize="hasRole('MEMBER') or hasRole('ADMIN')" th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()} + '/postcomment'}" th:object="${newComment}" method="POST" >
         <table>
             <thead>
             <tr>
@@ -157,6 +149,11 @@
                 </td>
             </tr>
             </thead>
+            <tr>
+                <td>
+                    <textarea name="message" th:field="*{message}"></textarea>
+                </td>
+            </tr>
         </table>
         <input type="submit" th:value="#{comment.post_button}">
     </form>

@@ -85,4 +85,7 @@ public class DatabaseService {
     public Comment findCommentByID(long id){
         return commentRepository.getOne(id);
     }
+    public List<Comment> findCommentsBySichtungOrderByDateDesc(Sichtung sichtung){
+        return commentRepository.findAllBySichtungOrderByCreationDateDesc(sichtung);
+    }
 }

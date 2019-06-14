@@ -9,6 +9,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 
 @Controller
 @SessionAttributes(names = {"sichtungen", "langObject", "currentLang"})
@@ -101,8 +103,9 @@ public class SichtungsController {
     public String editSightingDetails(@PathVariable("nr") long nr, Model m, Principal principal) {
         Sichtung editSichtung = dbservice.findSichtungByID(nr);
         m.addAttribute("detailsSighting", editSichtung);
-        m.addAttribute("nr", nr);
-        if (principal != null) m.addAttribute("principal",principal);
+        m.addAttribute("sightingCommentList", dbservice.findCommentsBySichtungOrderByDateDesc(editSichtung));
+        m.addAttribute("newComment", new Comment());
+        if (principal != null) m.addAttribute("principal", principal);
         return "sichtung/editSighting";
 
     }
@@ -119,7 +122,7 @@ public class SichtungsController {
     }
 
     @PostMapping("/sichtung/edit/{nr}")
-    public String saveSightingDetails(@PathVariable("nr")long nr,  Model m, @Valid @ModelAttribute("detailsSighting") Sichtung sichtung, BindingResult bindingResult, @RequestAttribute("picture") MultipartFile picture) throws IOException {
+    public String saveSightingDetails(@PathVariable("nr") long nr, Model m, @Valid @ModelAttribute("detailsSighting") Sichtung sichtung, BindingResult bindingResult, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         if (bindingResult.hasErrors()) {
             m.addAttribute("detailsSighting", sichtung);
             return "sichtung/editSighting";
@@ -138,5 +141,32 @@ public class SichtungsController {
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());
         return "redirect:/sichtung";
 
+    }
+
+    @PostMapping("/sichtung/edit/{nr}/deletecomment/{id}")
+    @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
+    public String deleteComment(@PathVariable("id") long id, Model m, @PathVariable("nr") long nr, Principal principal) {
+        Comment toDelete = dbservice.findCommentByID(id);
+        if (toDelete.getCreator().getLoginname().equals(principal.getName())) dbservice.removeComment(toDelete);
+        m.addAttribute("detailsSighting", dbservice.findSichtungByID(nr));
+        return "redirect:/sichtung/edit/" + nr;
+    }
+
+    @PostMapping("/sichtung/edit/{nr}/postcomment")
+    @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
+    public String postComment(@PathVariable("nr") long nr, Model m, Principal principal, @Valid @ModelAttribute("newComment") Comment newComment, BindingResult bindingResult) {
+        if (bindingResult.hasFieldErrors("message")) {
+            m.addAttribute("detailsSighting", dbservice.findSichtungByID(nr));
+            m.addAttribute("newComment", newComment);
+            m.addAttribute("sightingCommentList", dbservice.findCommentsBySichtungOrderByDateDesc(dbservice.findSichtungByID(nr)));
+            return "redirect:/sichtung/edit/" + nr;
+        }
+        newComment.setCreationDate(LocalDate.now());
+        newComment.setCreator(dbservice.findUserByLoginname(principal.getName()));
+        newComment.setSichtung(dbservice.findSichtungByID(nr));
+        dbservice.addComment(newComment);
+        m.addAttribute("detailsSighting", dbservice.findSichtungByID(nr));
+        m.addAttribute("sightingCommentList", dbservice.findCommentsBySichtungOrderByDateDesc(dbservice.findSichtungByID(nr)));
+        return "redirect:/sichtung/edit/" + nr;
     }
 }
