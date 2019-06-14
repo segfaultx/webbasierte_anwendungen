@@ -87,4 +87,12 @@ public class User {
     public void setId(long id) {
         this.id = id;
     }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
 }
