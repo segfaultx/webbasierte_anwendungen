@@ -86,23 +86,24 @@ public class UserController {
 
     @GetMapping("/edituser/{nr}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String showEditUser(@PathVariable("nr") int nr, Model m) {
-        User originalUser = dbservice.findAllUsersByOrderByLoginname().get(nr);
-        User editUser = new User(originalUser.getLoginname(),originalUser.getPassword(),originalUser.getFullname());
-        m.addAttribute("editUser", editUser);
-        m.addAttribute("oldUser", originalUser);
+    public String showEditUser(@PathVariable("nr") int nr, Model m, @ModelAttribute("userlist") List<User> users) {
+        User editUser = users.get(nr);
+        m.addAttribute("editUser", users.get(nr));
         return "users/edituser";
     }
 
     @PostMapping("/edituser")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateUser(@ModelAttribute("oldUser")User oldUser, @Valid @ModelAttribute("editUser") User edittedUser, BindingResult bindingResult, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
-        if(bindingResult.hasErrors()){
+    public String updateUser(@ModelAttribute("oldUser")User oldUser, @ModelAttribute("editUser") User edittedUser, BindingResult bindingResult, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
+        if(bindingResult.hasFieldErrors("fullname")){
             m.addAttribute("editUser", edittedUser);
             return "users/edituser";
         }
-
         if (picture.getSize() > 0) pictureservice.saveUserAvatar(edittedUser.getLoginname(), picture.getInputStream());
+        User copyUser = dbservice.findUserByLoginname(edittedUser.getLoginname());
+        copyUser.setFullname(edittedUser.getFullname());
+        if(!edittedUser.getPassword().equals("")) copyUser.setPassword(edittedUser.getPassword());
+        dbservice.addUser(copyUser);
         m.addAttribute("userlist", dbservice.findAllUsersByOrderByLoginname());
         return "redirect:/users";
 
