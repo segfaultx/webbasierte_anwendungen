@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @SessionAttributes(names = {"sichtungen", "langObject", "currentLang"})
@@ -97,10 +98,11 @@ public class SichtungsController {
     }
 
     @GetMapping("/sichtung/edit/{nr}")
-    public String editSightingDetails(@PathVariable("nr") long nr, Model m) {
+    public String editSightingDetails(@PathVariable("nr") long nr, Model m, Principal principal) {
         Sichtung editSichtung = dbservice.findSichtungByID(nr);
         m.addAttribute("detailsSighting", editSichtung);
         m.addAttribute("nr", nr);
+        if (principal != null) m.addAttribute("principal",principal);
         return "sichtung/editSighting";
 
     }

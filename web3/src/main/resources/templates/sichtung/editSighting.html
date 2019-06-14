@@ -122,5 +122,44 @@
         </tr>
     </table>
 </form>
+<div>
+    <form th:if="${#lists.size(detailsSighting.getCommentList())>0}" th:each="comment, status : ${detailsSighting.getCommentList()}">
+        <table>
+            <tr>
+                <td>
+                    <label>
+                        <b th:text="#{comments.user}+ ': '"> user</b> <span th:text="${comment.getFullname()}+' ' ">fullname</span>
+                        <b th:text="#{comments.date} +' ' "> date</b> <span th:text="${comment.getCreationDate()}">date</span>
+                    </label>
+                </td>
+                <td th:if="${principal} ne null">
+                    <div th:if="${principal.getName()} eq ${comment.getCreator().getLoginname()} or ${principal.getName()} eq 'admin'">
+                        <input type="submit" th:value="#{comment.delete}">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>
+                        <b th:text="#{comments.message}+' '">msg</b>
+                        <span th:text="${comment.getMessage()}"> usrmsg</span>
+                    </label>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <form sec:authorize="hasRole('MEMBER') or hasRole('ADMIN')">
+        <table>
+            <thead>
+            <tr>
+                <td>
+                    <span th:text="#{comment.post}"> post comment</span>
+                </td>
+            </tr>
+            </thead>
+        </table>
+        <input type="submit" th:value="#{comment.post_button}">
+    </form>
+</div>
 </body>
 </html>
