@@ -12,9 +12,9 @@ public class LoginController {
 
     @GetMapping("/login")
     public String showLogin() {
-        return "login";
+        return "login/login";
     }
 
     @GetMapping("/")
-    public String swapToLogin(){ return "login";}
+    public String swapToLogin(){ return "redirect:/login";}
 }
