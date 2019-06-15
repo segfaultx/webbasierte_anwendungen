@@ -76,8 +76,8 @@ public class DatabaseService {
     public Sichtung findSichtungByID(long id) {
         return sichtungsrepo.getOne(id);
     }
-    public void addComment(Comment comment){
-        commentRepository.save(comment);
+    public Comment addComment(Comment comment){
+        return commentRepository.save(comment);
     }
     public void removeComment(Comment comment){
         commentRepository.delete(comment);
