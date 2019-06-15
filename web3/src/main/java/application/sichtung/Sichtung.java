@@ -1,5 +1,8 @@
 package application.sichtung;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -10,7 +13,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 public class Sichtung implements Serializable {
     @Id
@@ -38,7 +42,7 @@ public class Sichtung implements Serializable {
     private int[] ratings = {0, 1, 2, 3, 4, 5};
     private int rating = 0;
 
-    @OneToMany(mappedBy="sichtung")
+    @OneToMany(mappedBy="sichtung", fetch=FetchType.EAGER)
     private List<Comment> commentList;
 
     public Sichtung() {

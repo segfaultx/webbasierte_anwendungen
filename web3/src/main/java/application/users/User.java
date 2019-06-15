@@ -1,17 +1,21 @@
 package application.users;
 
 import application.sichtung.Comment;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.List;
 
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="loginname")
 @Entity
 @Table(name = "USERS")
 @Validated
-public class User {
+public class User implements Serializable {
     @Id
     @Size(min = 3, max = 80)
     private String loginname;
@@ -27,7 +31,7 @@ public class User {
     private long id;
     private String usergroup;
 
-    @OneToMany(mappedBy="creator")
+    @OneToMany(mappedBy="creator", fetch=FetchType.EAGER)
     private List<Comment> commentList;
 
     public User() {

@@ -1,29 +1,31 @@
 package application.sichtung;
 
 import application.users.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDate;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "commentId")
 @Entity
-public class Comment {
+@Validated
+public class Comment implements Serializable {
     @Id
     @GeneratedValue
-    @NotNull
     private long commentId;
     @NotNull
     @Size(min=2, max=80)
     private String message;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private User creator;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @NotNull
     private Sichtung sichtung;
 
@@ -33,7 +35,7 @@ public class Comment {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
 
-    public long getComment_id() {
+    public long getCommentId() {
         return commentId;
     }
 
