@@ -30,4 +30,13 @@ public class SichtungenRestController {
         }
         return response;
     }
+
+    @GetMapping("/{sid}/kommentare")
+    public List<Comment> getSichtungskommentareById(@PathVariable("sid") long sid){
+        return dbservice.findCommentsBySichtungOrderByDateDesc(dbservice.findSichtungByID(sid));
+    }
+    @GetMapping("/{sid}/kommentare/{kid}")
+    public Comment getCommentBySichtungIdAndKommentarId(@PathVariable("sid") long sid, @PathVariable("kid") long kid){
+        return dbservice.findCommentByID(kid);
+    }
 }

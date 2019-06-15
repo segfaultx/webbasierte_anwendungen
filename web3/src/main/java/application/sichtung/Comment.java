@@ -2,6 +2,7 @@ package application.sichtung;
 
 import application.users.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "commentId")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Validated
 public class Comment implements Serializable {
