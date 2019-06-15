@@ -26,7 +26,7 @@ public class SichtungenRestController {
     public List<String> getAllSichtungen(){
         List<String> response = new ArrayList<String>();
         for (Sichtung sichtung : dbservice.findAllSichtungen()){
-            response.add("https://localhost:8080/rest/sichtungen/"+sichtung.getId());
+            response.add("/rest/sichtungen/"+sichtung.getId());
         }
         return response;
     }
