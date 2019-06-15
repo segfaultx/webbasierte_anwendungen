@@ -46,12 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                     .antMatchers("/sichtung","/sichtung/**").permitAll()
-                    .antMatchers("/rest/**").permitAll()
+                    .antMatchers("/rest/**","/rest/**/**").permitAll()
                     .antMatchers("/user*").authenticated()
                     .anyRequest().hasRole("ADMIN")
                     .antMatchers("/h2-console/**").permitAll()
                 .and()
-                    .csrf().ignoringAntMatchers("/h2-console/**") // h2 db configs
+                    .csrf().ignoringAntMatchers("/h2-console/**","/rest/**") // h2 db configs
                 .and()
                     .headers().frameOptions().sameOrigin() // h2 db configs
                 .and()

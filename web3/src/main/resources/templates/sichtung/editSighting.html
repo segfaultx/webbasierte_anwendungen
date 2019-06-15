@@ -113,7 +113,7 @@
 <div>
     <form th:if="${#lists.size(sightingCommentList)>0}"
           th:each="comment, status : ${sightingCommentList}" method="POST"
-          th:action="@{'/sichtung/edit/'+ ${detailsSighting.getId()} + '/deletecomment/' + ${comment.getComment_id()}}" th:object="${detailsSighting}">
+          th:action="@{'/sichtung/edit/'+ ${detailsSighting.getId()} + '/deletecomment/' + ${comment.getCommentId()}}" th:object="${detailsSighting}">
         <input type="hidden" name="id" th:field="*{id}"/>
         <table>
             <tr>
