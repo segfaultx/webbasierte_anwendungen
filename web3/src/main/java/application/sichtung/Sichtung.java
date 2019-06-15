@@ -1,6 +1,7 @@
 package application.sichtung;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,10 +36,12 @@ public class Sichtung implements Serializable {
     @Siebzehnhaft(message = "{seventeen.error}")
     private String description;
     @Transient
+    @JsonIgnore
     private String[] radiobtns = {"sighting.morning", "sighting.noon", "sighting.evening"};
     @NotNull(message = "{daytime.error}")
     private String day_time;
     @Transient
+    @JsonIgnore
     private int[] ratings = {0, 1, 2, 3, 4, 5};
     private int rating = 0;
 

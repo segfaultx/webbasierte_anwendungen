@@ -2,6 +2,7 @@ package application.users;
 
 import application.sichtung.Comment;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,6 +21,7 @@ public class User implements Serializable {
     @Size(min = 3, max = 80)
     private String loginname;
     @NotNull
+    @JsonIgnore
     @Size(min = 3, max = 80)
     private String password;
     @NotNull
@@ -31,6 +33,7 @@ public class User implements Serializable {
     private long id;
     private String usergroup;
 
+    @JsonIgnore
     @OneToMany(mappedBy="creator", fetch=FetchType.EAGER)
     private List<Comment> commentList;
 

@@ -2,6 +2,7 @@ package application.sichtung;
 
 import application.users.User;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +30,7 @@ public class Comment implements Serializable {
     private User creator;
     @ManyToOne(fetch=FetchType.EAGER)
     @NotNull
+    @JsonIgnore
     private Sichtung sichtung;
 
     @NotNull
