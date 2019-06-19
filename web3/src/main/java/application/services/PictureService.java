@@ -1,6 +1,7 @@
 package application.services;
 
 
+import application.sichtung.GeoData;
 import application.sichtung.SichtungsController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,16 +55,18 @@ public class PictureService {
         return new ByteArrayResource(Files.readAllBytes(Paths.get(AVATAR_UPLOADDIR, "avatar-default.png")));
     }
 
-    public void saveSightingPicture(long id, InputStream inputStream) throws IOException {
+    public GeoData saveSightingPicture(long id, InputStream inputStream) throws IOException {
+        GeoData data = null;
         if (inputStream != null) {
             Path filepath = Paths.get(SIGHTING_UPLOADDIR, "sighting-" + id + ".png");
             Files.copy(inputStream, filepath);
             try{
-                geoDataService.retrieveGeoData(SIGHTING_UPLOADDIR+"sighting-"+id+".png");
+                data = geoDataService.retrieveGeoData(SIGHTING_UPLOADDIR+"sighting-"+id+".png");
             }catch(Exception ex){
                 logger.info(ex.getMessage());
             }
         }
+        return data;
     }
 
     public ByteArrayResource loadSightingPicture(long id) throws IOException {

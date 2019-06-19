@@ -127,8 +127,9 @@ public class SichtungsController {
             m.addAttribute("detailsSighting", sichtung);
             return "sichtung/editSighting";
         }
+        GeoData geoData = null;
         if (picture != null && picture.getSize() > 0)
-            pictureService.saveSightingPicture(nr, picture.getInputStream());
+            geoData = pictureService.saveSightingPicture(nr, picture.getInputStream());
         Sichtung savesichtung = dbservice.findSichtungByID(nr);
         savesichtung.setDate(sichtung.getDate());
         savesichtung.setDay_time(sichtung.getDay_time());
@@ -136,6 +137,11 @@ public class SichtungsController {
         savesichtung.setFinder(sichtung.getFinder());
         savesichtung.setPlace(sichtung.getPlace());
         savesichtung.setRating(sichtung.getRating());
+        if(geoData!=null){
+            savesichtung.setDate(geoData.getOrigDate());
+            savesichtung.setLatitude(geoData.getLatitude());
+            savesichtung.setLongtitude(geoData.getLongtitude());
+        }
         dbservice.saveSichtung(savesichtung);
         m.addAttribute("sichtungsform", new Sichtung());
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());
