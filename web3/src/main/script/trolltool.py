@@ -2,7 +2,7 @@
 
 import sys, requests, re, random
 
-ptrn = re.compile(r"ama")
+ptrn = re.compile(sys.argv[1])
 
 trollusers = [("troll1", "troll"), ("troll2", "troll"), ("troll3", "troll")]
 
