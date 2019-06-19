@@ -67,7 +67,7 @@ public class SichtungenRestController {
         Comment updateComment = dbservice.findCommentByID(kid);
         updateComment.setMessage(comment.getMessage());
 
-        return null;
+        return dbservice.addComment(updateComment);
     }
 }
 

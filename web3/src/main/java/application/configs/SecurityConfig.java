@@ -53,13 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     // Rest API
                     .antMatchers(HttpMethod.GET,"/rest/**")
                         .permitAll()
-                    .antMatchers(HttpMethod.POST,"/rest/**")
-                        .authenticated()
-                            .anyRequest().hasRole("MEMBER")
-                    .antMatchers(HttpMethod.PUT,"/rest/**")
-                        .authenticated()
-                            .anyRequest().hasRole("MEMBER")
-                    .antMatchers(HttpMethod.DELETE,"/rest/**")
+                    .antMatchers("/rest/**")
                         .authenticated()
                             .anyRequest().hasRole("MEMBER")
                 // Usermanagement
