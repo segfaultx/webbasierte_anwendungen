@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,10 @@ public class SichtungenRestController {
     @PostMapping("/{sid}/kommentare")
     @PreAuthorize("hasRole('MEMBER')")
     public Comment addCommentToSichtungById(@PathVariable("sid")long sid, @Valid @RequestBody Comment comment, BindingResult bindingResult) throws NotLoggedInException{
-        if(bindingResult.hasFieldErrors("message") || bindingResult.hasFieldErrors("creationDate")){
+        if(bindingResult.hasFieldErrors("message")){
             return null;
         }
+        comment.setCreationDate(LocalDate.now());
         comment.setSichtung(dbservice.findSichtungByID(sid));
         comment.setCreator(dbservice.findUserByLoginname(comment.getCreator().getLoginname()));
         return dbservice.addComment(comment);
