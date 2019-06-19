@@ -20,9 +20,9 @@ if type(r.json()) is list:
 
 new_comment["commentId"] = 0
 new_comment["message"] = "yoyoyoyoo4"
-r = requests.post("http://localhost:8080/rest/sichtungen/1/kommentare", json=new_comment, auth=AUTHINFO)
-print(r.status_code)
-print(r.text)
+# r = requests.post("http://localhost:8080/rest/sichtungen/1/kommentare", json=new_comment, auth=AUTHINFO)
+# print(r.status_code)
+# print(r.text)
 r = requests.delete("http://localhost:8080/rest/sichtungen/1/kommentare/6", auth=AUTHINFO)
 
 print(r.status_code)
