@@ -3,6 +3,7 @@ package application.sichtung;
 import application.services.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class SichtungenRestController {
         return dbservice.findCommentByID(kid);
     }
     @PostMapping("/{sid}/kommentare")
+    @PreAuthorize("hasRole('MEMBER')")
     public Comment addCommentToSichtungById(@PathVariable("sid")long sid, @Valid @RequestBody Comment comment, BindingResult bindingResult) throws NotLoggedInException{
         if(bindingResult.hasFieldErrors("message") || bindingResult.hasFieldErrors("creationDate")){
             return null;

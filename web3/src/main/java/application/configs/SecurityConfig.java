@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     MyUserDetailsService myUserDetailsService;
+    @Autowired
+    MyBasicAuthenticationPoint authenticationPoint;
 
     @Bean
     PasswordEncoder getPasswordEncoder() {
@@ -68,6 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout()
                     .logoutSuccessUrl("/login")
-                    .permitAll();
+                    .permitAll()
+                .and()
+                    .httpBasic()
+                    .authenticationEntryPoint(authenticationPoint);
     }
 }
