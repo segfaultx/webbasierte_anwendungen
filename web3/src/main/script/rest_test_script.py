@@ -15,15 +15,15 @@ if type(r.json()) is list:
     for item in r.json():
         call = "http://localhost:8080" + item
         r = requests.get(call)
-        new_comment = r.json()["commentList"][0]
+        new_comment = r.json()["commentList"][1]
         print(r.json())
 
 new_comment["commentId"] = 0
 new_comment["message"] = "yoyoyoyoo4"
-# r = requests.post("http://localhost:8080/rest/sichtungen/1/kommentare", json=new_comment, auth=AUTHINFO)
+r = requests.put("http://localhost:8080/rest/sichtungen/1/kommentare/6", json=new_comment, auth=AUTHINFO)
 # print(r.status_code)
 # print(r.text)
-r = requests.delete("http://localhost:8080/rest/sichtungen/1/kommentare/6", auth=AUTHINFO)
+#r = requests.delete("http://localhost:8080/rest/sichtungen/1/kommentare/6", auth=AUTHINFO)
 
 print(r.status_code)
 print(r.text)

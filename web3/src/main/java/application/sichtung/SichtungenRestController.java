@@ -57,6 +57,18 @@ public class SichtungenRestController {
         if(!dbservice.findCommentByID(kid).getCreator().getLoginname().equals(principal.getName())) throw new NotYourCommentException(principal.getName());
         dbservice.deleteCommentById(kid);
     }
+    @PutMapping("/{sid}/kommentare/{kid}")
+    @PreAuthorize("hasRole('MEMBER')")
+    public Comment updateCommentById(@PathVariable("sid") long sid, @PathVariable("kid") long kid,
+                                     @Valid @RequestBody Comment comment,
+                                     BindingResult bindingResult, Principal principal){
+        if(!principal.getName().equals(dbservice.findCommentByID(kid).getCreator().getLoginname())) throw new NotYourCommentException(principal.getName());
+        if(bindingResult.hasFieldErrors("message")) return null;
+        Comment updateComment = dbservice.findCommentByID(kid);
+        updateComment.setMessage(comment.getMessage());
+
+        return null;
+    }
 }
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
