@@ -53,8 +53,8 @@ public class SichtungenRestController {
     }
     @DeleteMapping("/{sid}/kommentare/{kid}")
     @PreAuthorize("hasRole('MEMBER')")
-    public void deleteCommentByCommentId(@PathVariable("sid") long sid, @PathVariable("kid") long kid, Principal principal){
-        System.out.println(principal.getName());
+    public void deleteCommentByCommentId(@PathVariable("sid") long sid, @PathVariable("kid") long kid, Principal principal) throws NotYourCommentException{
+        if(!dbservice.findCommentByID(kid).getCreator().getLoginname().equals(principal.getName())) throw new NotYourCommentException(principal.getName());
         dbservice.deleteCommentById(kid);
     }
 }
@@ -64,4 +64,8 @@ class NotLoggedInException extends RuntimeException{
     public NotLoggedInException(String message){
         super(message);
     }
+}
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class NotYourCommentException extends RuntimeException{
+    public NotYourCommentException(String message){super(message);}
 }

@@ -48,7 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                    // Sichtungspage
                     .antMatchers("/sichtung","/sichtung/**").permitAll()
+                    // Rest API
                     .antMatchers(HttpMethod.GET,"/rest/**")
                         .permitAll()
                     .antMatchers(HttpMethod.POST,"/rest/**")
@@ -60,8 +62,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.DELETE,"/rest/**")
                         .authenticated()
                             .anyRequest().hasRole("MEMBER")
+                // Usermanagement
                     .antMatchers("/user*").authenticated()
-                        .anyRequest().hasRole("ADMIN")
+                            .anyRequest().hasRole("ADMIN")
                     .antMatchers("/h2-console/**").permitAll()
                 .and()
                     .csrf().ignoringAntMatchers("/h2-console/**","/rest/**") // h2 db configs
