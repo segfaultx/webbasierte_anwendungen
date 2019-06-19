@@ -48,11 +48,9 @@ public class SichtungenRestController {
         if(bindingResult.hasFieldErrors("message")){
             return null;
         }
-        String username = "hallo123";
         comment.setCreationDate(LocalDate.now());
         comment.setSichtung(dbservice.findSichtungByID(sid));
-        if(principal != null) username = principal.getName();
-        comment.setCreator(dbservice.findUserByLoginname(username));
+        comment.setCreator(dbservice.findUserByLoginname(principal.getName()));
         return dbservice.addComment(comment);
     }
     @DeleteMapping("/{sid}/kommentare/{kid}")
