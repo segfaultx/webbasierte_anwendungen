@@ -23,4 +23,5 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	runtimeOnly 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	implementation 'com.drewnoakes:metadata-extractor:2.11.0'
 }
