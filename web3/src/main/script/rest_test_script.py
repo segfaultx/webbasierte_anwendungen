@@ -23,7 +23,7 @@ new_comment["message"] = "yoyoyoyoo5"
 #r = requests.put("http://localhost:8080/rest/sichtungen/1/kommentare/6", json=new_comment, auth=AUTHINFO)
 # print(r.status_code)
 # print(r.text)
-r = requests.delete("http://localhost:8080/rest/sichtungen/1/kommentare/6", auth=AUTHINFO)
+#r = requests.delete("http://localhost:8080/rest/sichtungen/1/kommentare/6", auth=AUTHINFO)
 
 print(r.status_code)
 print(r.text)
