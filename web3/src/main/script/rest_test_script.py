@@ -6,7 +6,7 @@ URL = f"http://localhost:8080/rest/sichtungen/"
 URL = URL + sys.argv[1] if len(sys.argv) > 1 else URL
 AUTHINFO = ("amatus", "hallo123")
 
-r = requests.get(URL, auth=AUTHINFO)
+r = requests.get(URL)
 
 print(r.json())
 
@@ -19,7 +19,11 @@ if type(r.json()) is list:
         print(r.json())
 
 new_comment["commentId"] = 0
-new_comment["message"] = "yoyoyoyoo3"
+new_comment["message"] = "yoyoyoyoo4"
 r = requests.post("http://localhost:8080/rest/sichtungen/1/kommentare", json=new_comment, auth=AUTHINFO)
+print(r.status_code)
+print(r.text)
+r = requests.delete("http://localhost:8080/rest/sichtungen/1/kommentare/6", auth=AUTHINFO)
+
 print(r.status_code)
 print(r.text)

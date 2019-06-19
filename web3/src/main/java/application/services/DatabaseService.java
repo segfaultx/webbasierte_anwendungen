@@ -88,4 +88,7 @@ public class DatabaseService {
     public List<Comment> findCommentsBySichtungOrderByDateDesc(Sichtung sichtung){
         return commentRepository.findAllBySichtungOrderByCreationDateDesc(sichtung);
     }
+    public void deleteCommentById(long id){
+        commentRepository.deleteById(id);
+    }
 }

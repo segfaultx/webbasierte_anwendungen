@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,12 @@ public class SichtungenRestController {
         comment.setSichtung(dbservice.findSichtungByID(sid));
         comment.setCreator(dbservice.findUserByLoginname(comment.getCreator().getLoginname()));
         return dbservice.addComment(comment);
+    }
+    @DeleteMapping("/{sid}/kommentare/{kid}")
+    @PreAuthorize("hasRole('MEMBER')")
+    public void deleteCommentByCommentId(@PathVariable("sid") long sid, @PathVariable("kid") long kid, Principal principal){
+        System.out.println(principal.getName());
+        dbservice.deleteCommentById(kid);
     }
 }
 
