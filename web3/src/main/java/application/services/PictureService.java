@@ -1,6 +1,10 @@
 package application.services;
 
 
+import application.sichtung.SichtungsController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,10 @@ public class PictureService {
     private String AVATAR_UPLOADDIR;
     @Value("${sighting_fileupload.directory}")
     private String SIGHTING_UPLOADDIR;
+
+    @Autowired
+    GeoDataService geoDataService;
+    private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
 
     public void saveUserAvatar(String username, InputStream inputStream) throws IOException {
         if (inputStream != null) {
@@ -50,6 +58,11 @@ public class PictureService {
         if (inputStream != null) {
             Path filepath = Paths.get(SIGHTING_UPLOADDIR, "sighting-" + id + ".png");
             Files.copy(inputStream, filepath);
+            try{
+                geoDataService.retrieveGeoData(SIGHTING_UPLOADDIR+"sighting-"+id+".png");
+            }catch(Exception ex){
+                logger.info(ex.getMessage());
+            }
         }
     }
 

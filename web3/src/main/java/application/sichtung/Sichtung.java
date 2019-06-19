@@ -45,6 +45,9 @@ public class Sichtung implements Serializable {
     private int[] ratings = {0, 1, 2, 3, 4, 5};
     private int rating = 0;
 
+    private double longtitude;
+    private double latitude;
+
     @OneToMany(mappedBy="sichtung", fetch=FetchType.EAGER)
     private List<Comment> commentList;
 
@@ -135,5 +138,21 @@ public class Sichtung implements Serializable {
 
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
+    }
+
+    public void setLongtitude(double longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongtitude() {
+        return longtitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 }
