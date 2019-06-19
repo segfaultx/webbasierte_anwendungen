@@ -44,13 +44,15 @@ public class SichtungenRestController {
     }
     @PostMapping("/{sid}/kommentare")
     @PreAuthorize("hasRole('MEMBER')")
-    public Comment addCommentToSichtungById(@PathVariable("sid")long sid, @Valid @RequestBody Comment comment, BindingResult bindingResult) throws NotLoggedInException{
+    public Comment addCommentToSichtungById(@PathVariable("sid")long sid, @Valid @RequestBody Comment comment, BindingResult bindingResult, Principal principal) throws NotLoggedInException{
         if(bindingResult.hasFieldErrors("message")){
             return null;
         }
+        String username = "hallo123";
         comment.setCreationDate(LocalDate.now());
         comment.setSichtung(dbservice.findSichtungByID(sid));
-        comment.setCreator(dbservice.findUserByLoginname(comment.getCreator().getLoginname()));
+        if(principal != null) username = principal.getName();
+        comment.setCreator(dbservice.findUserByLoginname(username));
         return dbservice.addComment(comment);
     }
     @DeleteMapping("/{sid}/kommentare/{kid}")
