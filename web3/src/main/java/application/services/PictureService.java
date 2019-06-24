@@ -55,16 +55,21 @@ public class PictureService {
         return new ByteArrayResource(Files.readAllBytes(Paths.get(AVATAR_UPLOADDIR, "avatar-default.png")));
     }
 
-    public GeoData saveSightingPicture(long id, InputStream inputStream) throws IOException {
-        GeoData data = null;
+    public void saveSightingPicture(long id, InputStream inputStream) throws IOException {
         if (inputStream != null) {
             Path filepath = Paths.get(SIGHTING_UPLOADDIR, "sighting-" + id + ".png");
+            if(Files.exists(filepath)) Files.delete(filepath);
             Files.copy(inputStream, filepath);
-            try{
-                data = geoDataService.retrieveGeoData(SIGHTING_UPLOADDIR+"sighting-"+id+".png");
-            }catch(Exception ex){
-                logger.info(ex.getMessage());
-            }
+
+        }
+    }
+
+    public GeoData getPictureGeoData(InputStream inputStream) {
+        GeoData data = null;
+        try {
+            data = geoDataService.retrieveGeoData(inputStream);
+        } catch (Exception ex) {
+            logger.info(ex.getMessage());
         }
         return data;
     }
