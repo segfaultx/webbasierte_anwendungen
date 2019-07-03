@@ -12,6 +12,9 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Userclass, representing users from database
+ */
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="loginname")
 @Entity
 @Table(name = "USERS")
@@ -37,68 +40,133 @@ public class User implements Serializable {
     @OneToMany(mappedBy="creator", fetch=FetchType.EAGER)
     private List<Comment> commentList;
 
+    /**
+     * empty construtor for form purposes
+     */
     public User() {
 
     }
 
+    /**
+     *
+     * @param loginname
+     * @param password
+     * @param fullname
+     */
     public User(String loginname, String password, String fullname) {
         this.loginname = loginname;
         this.password = password;
         this.fullname = fullname;
     }
 
+    /**
+     *
+     * @return
+     */
     public Boolean getActive() {
         return active;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFullname() {
         return fullname;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLoginname() {
         return loginname;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     *
+     * @param fullname
+     */
     public void setFullname(String fullname) {
         this.fullname = fullname;
     }
 
+    /**
+     *
+     * @param active
+     */
     public void setActive(Boolean active) {
         this.active = active;
     }
 
+    /**
+     *
+     * @param loginname
+     */
     public void setLoginname(String loginname) {
         this.loginname = loginname;
     }
 
+    /**
+     *
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUsergroup() {
         return usergroup;
     }
 
+    /**
+     *
+     * @param usergroup
+     */
     public void setUsergroup(String usergroup) {
         this.usergroup = usergroup;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @param commentList
+     */
     public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Comment> getCommentList() {
         return commentList;
     }

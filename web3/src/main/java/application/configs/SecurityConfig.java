@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Security config class
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -19,12 +22,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     MyBasicAuthenticationPoint authenticationPoint;
 
+    /**
+     *
+     * @return
+     */
     @Bean
     PasswordEncoder getPasswordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
+    /**
+     * config method, setting in memory users and registers userdetailsservice for db user authentication
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         PasswordEncoder pwenc = getPasswordEncoder();
@@ -45,6 +56,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(getPasswordEncoder());
     }
 
+    /**
+     * config method to set access rights on different uris
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()

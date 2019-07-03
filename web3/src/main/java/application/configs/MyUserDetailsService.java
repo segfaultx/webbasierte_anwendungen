@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * implementation for userdetailsservice, used to authenticate userlogins
+ */
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
@@ -21,6 +24,12 @@ public class MyUserDetailsService implements UserDetailsService {
 
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
 
+    /**
+     * loads user by username
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = dbservice.findUserByLoginname(username);

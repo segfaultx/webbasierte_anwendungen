@@ -14,10 +14,20 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.time.ZoneId;
 
+
+/**
+ * service to extract geodata from picture
+ */
 @Service
 public class GeoDataService {
     private Logger logger = LoggerFactory.getLogger(SichtungsController.class);
 
+    /**
+     * extracts geodata from file
+     * @param file
+     * @return
+     * @throws Exception
+     */
     public GeoData retrieveGeoData(InputStream file) throws Exception {
         GeoData data = new GeoData();
         Metadata metadata = ImageMetadataReader.readMetadata(file);
