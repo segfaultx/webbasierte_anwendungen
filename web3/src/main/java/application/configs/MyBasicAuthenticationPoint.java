@@ -10,8 +10,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+
+/**
+ * Class for basic authentication, required for rest-endpoint
+ */
 @Component
 public class MyBasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
+    /**
+     *
+     * @param request
+     * @param response
+     * @param authException
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.addHeader("WWW-Authenticate","Basic realm=" + getRealmName() + "");
@@ -20,6 +32,10 @@ public class MyBasicAuthenticationPoint extends BasicAuthenticationEntryPoint {
         writer.print("HTTP Status 401 - "+ authException.getMessage());
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         setRealmName("Sichtung");

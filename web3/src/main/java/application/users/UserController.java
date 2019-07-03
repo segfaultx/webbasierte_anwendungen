@@ -21,6 +21,10 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
+
+/**
+ * Controller handling all actions under /users
+ */
 @Controller
 @SessionAttributes("userlist")
 @RequestMapping("/users")
@@ -35,12 +39,21 @@ public class UserController {
     @Value("${avatar_fileupload.directory}")
     private String UPLOADDIR;
 
-
+    /**
+     *
+     * @param m
+     */
     @ModelAttribute("userlist")
     public void initUserlist(Model m) {
         m.addAttribute("userlist", dbservice.findAllUsers());
     }
 
+    /**
+     * shows userlist
+     * @param m
+     * @param userlist
+     * @return
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public String showUserlist(Model m, @ModelAttribute("userlist") List<User> userlist) {
@@ -48,6 +61,15 @@ public class UserController {
         return "users/userlist";
     }
 
+    /**
+     * adds new user to database
+     * @param newUser
+     * @param bindingResult
+     * @param m
+     * @param picture
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/adduser")
     @PreAuthorize("hasRole('ADMIN')")
     public String addUser(@Valid @ModelAttribute("newUser") User newUser, BindingResult bindingResult, Model m, @RequestParam("picture") MultipartFile picture) throws IOException {
@@ -65,6 +87,12 @@ public class UserController {
         return "redirect:/users";
     }
 
+    /**
+     * method to download image of user
+     * @param name
+     * @return
+     * @throws IOException
+     */
     @GetMapping("/image/{name}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> downloadImage(@PathVariable("name") String name) throws IOException {
@@ -77,6 +105,12 @@ public class UserController {
                 .body(resource);
     }
 
+    /**
+     * filter function
+     * @param m
+     * @param searchexp
+     * @return
+     */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public String filterUsers(Model m, @RequestParam("searchfield") String searchexp) {
@@ -84,6 +118,13 @@ public class UserController {
         return "users/userlist";
     }
 
+    /**
+     * method to show details page to edit a user
+     * @param nr
+     * @param m
+     * @param users
+     * @return
+     */
     @GetMapping("/edituser/{nr}")
     @PreAuthorize("hasRole('ADMIN')")
     public String showEditUser(@PathVariable("nr") int nr, Model m, @ModelAttribute("userlist") List<User> users) {
@@ -92,6 +133,16 @@ public class UserController {
         return "users/edituser";
     }
 
+    /**
+     * method to handle the post from editUser
+     * @param oldUser
+     * @param edittedUser
+     * @param bindingResult
+     * @param m
+     * @param picture
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/edituser")
     @PreAuthorize("hasRole('ADMIN')")
     public String updateUser(@ModelAttribute("oldUser")User oldUser, @ModelAttribute("editUser") User edittedUser, BindingResult bindingResult, Model m, @RequestAttribute("picture") MultipartFile picture) throws IOException {
@@ -110,6 +161,13 @@ public class UserController {
 
     }
 
+    /**
+     * method to delete a user
+     * @param nr
+     * @param m
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/removeuser/{nr}")
     @PreAuthorize("hasRole('ADMIN')")
     public String removeUser(@PathVariable("nr") int nr, Model m) throws IOException {
@@ -119,6 +177,11 @@ public class UserController {
         return "redirect:/users";
     }
 
+    /**
+     * method to show the add user screen
+     * @param m
+     * @return
+     */
     @GetMapping("/adduser")
     public String showAddUser(Model m) {
         m.addAttribute("newUser", new User());
