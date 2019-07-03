@@ -33,27 +33,23 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return
      */
     public Comment findCommentByCommentIdAndCreatorAndSichtung(long id, User creator, Sichtung sichtung);
-    
+
     /**
-     * 
-     * @param id
-     * @param creator
+     *
+     * @param sichtung
      * @return
      */
     public List<Comment> findAllBySichtung(Sichtung sichtung);
-   
+
     /**
-     * 
-     * @param id
-     * @param creator
+     *
+     * @param sichtung
      * @return
      */
     public List <Comment> findAllBySichtungOrderByCreationDateDesc(Sichtung sichtung);
-    
+
     /**
-     * 
-     * @param id
-     * @param creator
+     *
      * @return
      */
     public List<Comment> findAllByOrderByCreationDate();

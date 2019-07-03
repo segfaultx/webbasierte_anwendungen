@@ -219,7 +219,7 @@ public class Sichtung implements Serializable {
      * @return
      */
     public List<Comment> getCommentList() {
-       image
+       return this.commentList;
     }
 
     /**image

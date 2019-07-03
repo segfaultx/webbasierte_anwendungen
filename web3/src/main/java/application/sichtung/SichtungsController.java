@@ -212,13 +212,13 @@ public class SichtungsController {
     }
 
     /**
-     *  to sightingorized user
-     *  to sighting
-     *  to sighting
-     *  to sighting
-     *  to sighting
-     *  to sighting
-     */ to sighting
+     * method to delete a comment
+     * @param id
+     * @param m
+     * @param nr
+     * @param principal
+     * @return
+     */
     @PostMapping("/sichtung/edit/{nr}/deletecomment/{id}")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     public String deleteComment(@PathVariable("id") long id, Model m, @PathVariable("nr") long nr, Principal principal) {
