@@ -48,7 +48,7 @@ export default class Sichtungsliste extends Vue {
               }
               return response.json();
             })
-            .then(responsedata => {
+            .then( (responsedata: ISichtung) => {
               tmplist.push(responsedata);
             })
             .catch(error => {
