@@ -1,4 +1,4 @@
-export default interface ISichtung{
+export default interface ISichtung {
     id: number;
     date: Date;
     place: string;
