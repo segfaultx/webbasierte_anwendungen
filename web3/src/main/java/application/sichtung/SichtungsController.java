@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 
+/**
+ * Controller managing sighting requests
+ */
 @Controller
 @SessionAttributes(names = {"sichtungen", "langObject", "currentLang"})
 public class SichtungsController {
@@ -31,6 +34,9 @@ public class SichtungsController {
     @Autowired
     PictureService pictureService;
 
+    /**
+     * Holds information of currently selected language
+     */
     public class langObject {
         private String[] langs = {"de", "en"};
         private String currLang = "de";
@@ -52,16 +58,30 @@ public class SichtungsController {
         }
     }
 
+    /**
+     * gets all sightings from the database and saves them locally
+     * @param m
+     */
     @ModelAttribute("sichtungen")
     public void init_model(Model m) {
         m.addAttribute("sichtungen", dbservice.findAllSichtungen());
     }
 
+    /**
+     * creates language object with initial language 
+     * @param m
+     */
     @ModelAttribute("langObject")
     public void init_langs(Model m) {
         m.addAttribute("langObject", new langObject());
     }
 
+    /**
+     * shows overview of all sightings
+     * @param sichtungsform
+     * @param m
+     * @return
+     */
     @GetMapping("/sichtung")
     public String showSichtungen(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m) {
         logger.info("Sichtungsform: " + sichtungsform);
@@ -70,6 +90,13 @@ public class SichtungsController {
         return "sichtung/sichtungen";
     }
 
+    /**
+     * adds a sighting to the database
+     * @param sichtungsform
+     * @param neueSichtungResult
+     * @param m
+     * @return
+     */
     @PostMapping("/sichtung")
     public String addSichtung(@Valid @ModelAttribute("sichtungsform") Sichtung sichtungsform, BindingResult neueSichtungResult, Model m) {
         if (neueSichtungResult.hasErrors()) {
@@ -84,6 +111,9 @@ public class SichtungsController {
 
     }
 
+    /**
+     * opens editing view of a sighting and deletes it from the database
+     */
     @GetMapping("/sichtung/{nr}")
     public String editSichtung(@PathVariable("nr") int nr, Model m) {
         m.addAttribute("sichtungsform", dbservice.findAllSichtungen().get(nr));
@@ -92,6 +122,13 @@ public class SichtungsController {
         return "sichtung/sichtungen";
     }
 
+    /**
+     * swaps to chosen language
+     * @param sichtungsform
+     * @param m
+     * @param langobject
+     * @return
+     */
     @PostMapping(value = "/sichtung", params = "sprache")
     public String swapLang(@ModelAttribute("sichtungsform") Sichtung sichtungsform, Model m, @ModelAttribute("langObject") langObject langobject) {
         m.addAttribute("sichtungsform", sichtungsform);
@@ -99,6 +136,13 @@ public class SichtungsController {
         return "sichtung/sichtungen";
     }
 
+    /**
+     * opens editing view for given sighting
+     * @param nr
+     * @param m
+     * @param principal
+     * @return
+     */
     @GetMapping("/sichtung/edit/{nr}")
     public String editSightingDetails(@PathVariable("nr") long nr, Model m, Principal principal) {
         Sichtung editSichtung = dbservice.findSichtungByID(nr);
@@ -110,6 +154,12 @@ public class SichtungsController {
 
     }
 
+    /**
+     * gets image of a sighting
+     * @param nr
+     * @return
+     * @throws IOException
+     */
     @GetMapping("/sichtung/image/{nr}")
     public ResponseEntity<Resource> downloadImage(@PathVariable("nr") int nr) throws IOException {
         String mimetype = pictureService.getMimeTypeSighting(nr);
@@ -121,6 +171,16 @@ public class SichtungsController {
                 .body(resource);
     }
 
+    /**
+     * saves changes of given sighting
+     * @param nr
+     * @param m
+     * @param sichtung
+     * @param bindingResult
+     * @param picture
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/sichtung/edit/{nr}")
     public String saveSightingDetails(@PathVariable("nr") long nr, Model m, @Valid @ModelAttribute("detailsSighting") Sichtung sichtung, BindingResult bindingResult, @RequestAttribute("picture") MultipartFile picture) throws IOException {
         if (bindingResult.hasErrors()) {
@@ -151,6 +211,14 @@ public class SichtungsController {
 
     }
 
+    /**
+     *  to sightingorized user
+     *  to sighting
+     *  to sighting
+     *  to sighting
+     *  to sighting
+     *  to sighting
+     */ to sighting
     @PostMapping("/sichtung/edit/{nr}/deletecomment/{id}")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     public String deleteComment(@PathVariable("id") long id, Model m, @PathVariable("nr") long nr, Principal principal) {
@@ -160,6 +228,15 @@ public class SichtungsController {
         return "redirect:/sichtung/edit/" + nr;
     }
 
+    /**
+     * posts a comment. requires user to be logged in and authorized
+     * @param nr
+     * @param m
+     * @param principal
+     * @param newComment
+     * @param bindingResult
+     * @return
+     */
     @PostMapping("/sichtung/edit/{nr}/postcomment")
     @PreAuthorize("hasRole('MEMBER') or hasRole('ADMIN')")
     public String postComment(@PathVariable("nr") long nr, Model m, Principal principal, @Valid @ModelAttribute("newComment") Comment newComment, BindingResult bindingResult) {

@@ -18,6 +18,9 @@ import java.time.LocalDate;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Validated
+/**
+ * A comment placed by a user to react to a sighting
+ */
 public class Comment implements Serializable {
     @Id
     @GeneratedValue
@@ -39,47 +42,91 @@ public class Comment implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
 
+    /**
+     * 
+     * @return
+     */
     public long getCommentId() {
         return commentId;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Sichtung getSichtung() {
         return sichtung;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * 
+     * @return
+     */
     public User getCreator() {
         return creator;
     }
 
+    /**
+     * 
+     * @return
+     */
     public void setComment_id(long comment_id) {
         this.commentId = comment_id;
     }
 
+    /**
+     * 
+     * @return
+     */
     public void setCreator(User creator) {
         this.fullname = creator.getFullname();
         this.creator = creator;
     }
 
+    /**
+     * 
+     * @return
+     */
     public void setMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * 
+     * @return
+     */
     public void setSichtung(Sichtung sichtung) {
         this.sichtung = sichtung;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getFullname() {
         return fullname;
     }
 
+    /**
+     * 
+     * @return
+     */
     public LocalDate getCreationDate() {
         return creationDate;
     }
 
+    /**
+     * 
+     * @return
+     */
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }

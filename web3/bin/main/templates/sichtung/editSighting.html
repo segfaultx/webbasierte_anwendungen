@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <style>
+        .fehleryo {
+            box-shadow: 0 0 5px red;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="#{editSighting.header}">Sichtung</h1>
+<form action="#" method="POST"
+      th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()}}" th:method="POST" th:object="${detailsSighting}"
+      enctype="multipart/form-data">
+    <table>
+        <input type="hidden" name="id" th:field="*{id}"/>
+        <tr>
+            <td>
+                <span th:text="#{form.finder}">Finder</span>
+            </td>
+            <td>
+                <input type="text" th:field="*{finder}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('finder')}" th:errors="*{finder}">Finderfehler</span>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <span th:text="#{form.place}">Fundort</span>
+            </td>
+            <td>
+                <input type="text" th:field="*{place}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('place')}" th:errors="*{place}">Ortfehler</span>
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                <span th:text="#{form.date}">Datum</span>
+            </td>
+            <td>
+                <input type="date" th:field="*{date}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Datumsfehler</span>
+            </td>
+        </tr>
+        <tr>
+
+            <td>
+                <span th:text="#{form.description}">Beschreibung</span>
+            </td>
+            <td>
+                <input type="text" th:field="*{description}" th:errorclass="fehleryo"/>
+            </td>
+            <td>
+                        <span th:if="${#fields.hasErrors('description')}"
+                              th:error="*{description}">Beschreibungsfehler</span>
+            </td>
+
+        </tr>
+
+        <div th:each="time:*{radiobtns}">
+            <tr>
+                <td>
+
+                    <label>
+                        <input type="radio" th:field="*{day_time}" th:value="#{${time}}"/>
+                        <span th:text="#{${time}}"> Text</span>
+                    </label>
+                </td>
+            </tr>
+        </div>
+        <tr>
+            <td>
+                <span th:text="#{form.rating}">Bewertung</span>
+            </td>
+            <td>
+                <select th:field="*{rating}">
+                    <option th:each="cr: *{ratings}" th:text="${#strings.repeat('*',cr)}" th:value="${cr}"
+                            th:errorclass="fehleryo">Stern
+                    </option>
+                </select>
+            </td>
+            <td>
+                <span th:if="${#fields.hasErrors('rating')}" th:error="*{rating}">Bewertungsfehler</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" th:name="picture" accept="image/*" th:value="#{editSighting.uploadpicbtn}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img th:src="@{'/sichtung/image/' + ${nr}}"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <input type="submit" id="submit" th:value="#{form.submitButton}" style="position: center"/>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+<div th:if="${detailsSighting.getLongtitude()}!= 0 or ${detailsSighting.getLatitude()}!= 0">
+    <a th:href="'https://www.openstreetmap.org/#map=17/'+${detailsSighting.getLatitude()}+'/'+${detailsSighting.getLongtitude()}" target="_blank" rel="noopener noreferrer">
+        <span th:text="#{sighting.linktext}">Hier gehts zur Sichtung!</span>
+    </a>
+</div>
+<div>
+    <form th:if="${#lists.size(sightingCommentList)>0}"
+          th:each="comment, status : ${sightingCommentList}" method="POST"
+          th:action="@{'/sichtung/edit/'+ ${detailsSighting.getId()} + '/deletecomment/' + ${comment.getCommentId()}}" th:object="${detailsSighting}">
+        <input type="hidden" name="id" th:field="*{id}"/>
+        <table>
+            <tr>
+                <td>
+                    <label>
+                        <b th:text="#{comments.user}+ ': '"> user</b> <span th:text="${comment.getFullname()}+' ' ">fullname</span>
+                        <b th:text="#{comments.date} +' ' "> date</b> <span
+                            th:text="${comment.getCreationDate()}">date</span>
+                    </label>
+                </td>
+                <td th:if="${principal} ne null">
+                    <div th:if="${principal.getName()} eq ${comment.getCreator().getLoginname()} or ${principal.getName()} eq 'admin'">
+                        <input type="submit" th:value="#{comment.delete}">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>
+                        <b th:text="#{comments.message}+' '">msg</b>
+                        <span th:text="${comment.getMessage()}"> usrmsg</span>
+                    </label>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <form sec:authorize="hasRole('MEMBER') or hasRole('ADMIN')" th:action="@{'/sichtung/edit/' + ${detailsSighting.getId()} + '/postcomment'}" th:object="${newComment}" method="POST" >
+        <table>
+            <thead>
+            <tr>
+                <td>
+                    <span th:text="#{comment.post}"> post comment</span>
+                </td>
+            </tr>
+            </thead>
+            <tr>
+                <td>
+                    <textarea name="message" th:field="*{message}"></textarea>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" th:value="#{comment.post_button}">
+    </form>
+</div>
+</body>
+</html>

@@ -14,6 +14,12 @@
 </head>
 <body>
 <h1 th:text="#{form.header}">Neue Sichtung erfassen</h1>
+<div sec:authorize="hasRole('ADMIN')">
+    <form th:action="@{/users}" th:method="GET">
+        <input th:type="submit" th:value="#{usermanagement.btntext}">
+    </form>
+</div>
+</div>
 <div>
     <form action="#" method="POST"
           th:action="@{/sichtung}" th:method="POST" th:object="${sichtungsform}">
@@ -130,6 +136,7 @@
             <th th:text="#{form.thDayTime}">Tageszeit</th>
             <th th:text="#{form.thRating}">Bewertung</th>
             <th th:text="#{form.thEdit}"> [edit]</th>
+            <th th:text="#{form.thDetails}">Details</th>
         </tr>
         </thead>
         <tr th:if="${#lists.size(sichtungen) > 0}" th:each="sichtung, status: ${sichtungen}">
@@ -140,6 +147,11 @@
             <td th:text="${sichtung.getDay_time()}">Tageszeit</td>
             <td th:text="${#strings.repeat('*',sichtung.getRating())}">Bewertung</td>
             <td><a th:href="@{'/sichtung/' + ${status.index}}"><span th:text="#{form.thEdit}">[edit]</span></a></td>
+            <td>
+                    <form th:action="@{'/sichtung/edit/' + ${sichtung.getId()} }" th:method="GET">
+                        <input th:type="submit" th:value="#{sightingDetails.btntext}">
+                    </form>
+            </td>
         </tr>
     </table>
 
@@ -154,5 +166,8 @@
             <input type="submit" th:value="#{form.submitButton}">
         </form>
     </div>
+    <form th:action="@{/logout}" th:method="POST">
+        <input th:type="submit" th:value="#{logout.btntext}">
+    </form>
 </footer>
 </html>

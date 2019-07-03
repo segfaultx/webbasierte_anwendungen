@@ -14,15 +14,7 @@
     <table>
         <tr>
             <td>
-                <input type="text" name="loginname" th:field="*{loginname}" th:errorclass="fehleryo"/>
-            </td>
-            <td>
-                <label th:text="#{adduser.form.loginname}">
-                    Loginname
-                </label>
-            </td>
-            <td>
-                <span th:if="${#fields.hasErrors('loginname')}" th:errors="*{loginname}">Usernamefehler</span>
+                <input type="hidden" name="loginname" th:field="*{loginname}"/>
             </td>
         </tr>
         <tr>

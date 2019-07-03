@@ -15,16 +15,27 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rest/sichtungen")
+/**
+ * controller managing sighting rest requests 
+ */
 public class SichtungenRestController {
     @Autowired
     DatabaseService dbservice;
 
-
+    /**
+     * 
+     * @param sid
+     * @return
+     */
     @GetMapping("/{sid}")
     public Sichtung getSichtungById(@PathVariable("sid") long sid){
         return dbservice.findSichtungByID(sid);
     }
 
+    /**
+     * 
+     * @return
+     */
     @GetMapping
     public List<String> getAllSichtungen(){
         List<String> response = new ArrayList<>();
@@ -34,14 +45,34 @@ public class SichtungenRestController {
         return response;
     }
 
+    /**
+     * 
+     * @param sid
+     * @return
+     */
     @GetMapping("/{sid}/kommentare")
     public List<Comment> getSichtungskommentareById(@PathVariable("sid") long sid){
         return dbservice.findCommentsBySichtungOrderByDateDesc(dbservice.findSichtungByID(sid));
     }
+    /**
+     * 
+     * @param sid
+     * @param kid
+     * @return
+     */
     @GetMapping("/{sid}/kommentare/{kid}")
     public Comment getCommentBySichtungIdAndKommentarId(@PathVariable("sid") long sid, @PathVariable("kid") long kid){
         return dbservice.findCommentByID(kid);
     }
+    /**
+     * 
+     * @param sid
+     * @param comment
+     * @param bindingResult
+     * @param principal
+     * @return
+     * @throws NotLoggedInException
+     */
     @PostMapping("/{sid}/kommentare")
     @PreAuthorize("hasRole('MEMBER')")
     public Comment addCommentToSichtungById(@PathVariable("sid")long sid, @Valid @RequestBody Comment comment, BindingResult bindingResult, Principal principal) throws NotLoggedInException{
@@ -53,12 +84,28 @@ public class SichtungenRestController {
         comment.setCreator(dbservice.findUserByLoginname(principal.getName()));
         return dbservice.addComment(comment);
     }
+    /**
+     * 
+     * @param sid
+     * @param kid
+     * @param principal
+     * @throws NotYourCommentException
+     */
     @DeleteMapping("/{sid}/kommentare/{kid}")
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteCommentByCommentId(@PathVariable("sid") long sid, @PathVariable("kid") long kid, Principal principal) throws NotYourCommentException{
         if(!dbservice.findCommentByID(kid).getCreator().getLoginname().equals(principal.getName())) throw new NotYourCommentException(principal.getName());
         dbservice.deleteCommentById(kid);
     }
+    /**
+     * 
+     * @param sid
+     * @param kid
+     * @param comment
+     * @param bindingResult
+     * @param principal
+     * @return
+     */
     @PutMapping("/{sid}/kommentare/{kid}")
     @PreAuthorize("hasRole('MEMBER')")
     public Comment updateCommentById(@PathVariable("sid") long sid, @PathVariable("kid") long kid,
@@ -74,11 +121,17 @@ public class SichtungenRestController {
 }
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
+/**
+ * 
+ */
 class NotLoggedInException extends RuntimeException{
     public NotLoggedInException(String message){
         super(message);
     }
 }
+/**
+ * 
+ */
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 class NotYourCommentException extends RuntimeException{
     public NotYourCommentException(String message){super(message);}
